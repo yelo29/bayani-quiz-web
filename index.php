@@ -16,14 +16,14 @@ $leaderboard = getLeaderboard(null, 3, 0);
     </div>
     
     <div class="text-center z-10 px-4">
-        <h1 class="text-6xl md:text-8xl font-bold font-serif text-white mb-6 drop-shadow-lg">
+        <h1 class="text-6xl md:text-8xl font-bold font-serif text-white mb-6 drop-shadow-lg" data-i18n='{"en":"Bayani Quiz","fil":"Bayani Quiz"}'>
             Bayani Quiz
         </h1>
-        <p class="text-xl md:text-2xl text-yellow-400 font-medium mb-8 max-w-2xl mx-auto">
+        <p class="text-xl md:text-2xl text-yellow-400 font-medium mb-8 max-w-2xl mx-auto" data-i18n='{"en":"Test your knowledge of Philippine history","fil":"Subukan ang iyong kaalaman sa kasaysayan ng Pilipinas"}'>
             Subukan ang iyong kaalaman sa kasaysayan ng Pilipinas
         </p>
         <a href="#categories" class="inline-block bg-yellow-400 text-[#0038A8] px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition transform hover:scale-105 shadow-lg">
-            <i class="fas fa-play mr-2"></i> Magsimula
+            <i class="fas fa-play mr-2"></i> <span data-i18n='{"en":"Start","fil":"Magsimula"}'>Magsimula</span>
         </a>
         
         <!-- Language Toggle -->
@@ -39,10 +39,10 @@ $leaderboard = getLeaderboard(null, 3, 0);
 <!-- Category Selection Grid -->
 <section id="categories" class="py-20 px-4 bg-gray-50">
     <div class="max-w-6xl mx-auto">
-        <h2 class="text-4xl font-bold font-serif text-center mb-4 text-[#0038A8]">
+        <h2 class="text-4xl font-bold font-serif text-center mb-4 text-[#0038A8]" data-i18n='{"en":"Choose a Category","fil":"Piliin ang Kategorya"}'>
             Piliin ang Kategorya
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto" data-i18n='{"en":"Select a category and test your knowledge","fil":"Pumili ng kategorya at simulan ang pagsubok sa iyong kaalaman"}'>
             Pumili ng kategorya at simulan ang pagsubok sa iyong kaalaman
         </p>
         
@@ -69,7 +69,7 @@ $leaderboard = getLeaderboard(null, 3, 0);
                                 <?php echo htmlspecialchars($category['name']); ?>
                             </h3>
                             <span class="text-sm text-gray-500">
-                                <i class="fas fa-question-circle mr-1"></i> 10 Questions
+                                <i class="fas fa-question-circle mr-1"></i> <span data-i18n='{"en":"10 Questions","fil":"10 Mga Tanong"}'>10 Questions</span>
                             </span>
                         </div>
                     </div>
@@ -81,7 +81,7 @@ $leaderboard = getLeaderboard(null, 3, 0);
                             Medium
                         </span>
                         <span class="text-[#0038A8] font-medium group-hover:translate-x-2 transition">
-                            Play <i class="fas fa-arrow-right ml-1"></i>
+                            <span data-i18n='{"en":"Play","fil":"Maglaro"}'>Play</span> <i class="fas fa-arrow-right ml-1"></i>
                         </span>
                     </div>
                 </a>
@@ -93,10 +93,10 @@ $leaderboard = getLeaderboard(null, 3, 0);
 <!-- Live Leaderboard Preview -->
 <section class="py-20 px-4 bg-white">
     <div class="max-w-4xl mx-auto">
-        <h2 class="text-4xl font-bold font-serif text-center mb-4 text-[#0038A8]">
+        <h2 class="text-4xl font-bold font-serif text-center mb-4 text-[#0038A8]" data-i18n='{"en":"Top Scores","fil":"Mga Nangungunang Score"}'>
             Top Scores
         </h2>
-        <p class="text-center text-gray-600 mb-8">
+        <p class="text-center text-gray-600 mb-8" data-i18n='{"en":"See the top players","fil":"Tingnan ang mga nangungunang manlalaro"}'>
             Tingnan ang mga nangungunang manlalaro
         </p>
         
@@ -104,7 +104,7 @@ $leaderboard = getLeaderboard(null, 3, 0);
             <?php if (empty($leaderboard)): ?>
                 <div class="text-center py-12 text-gray-500">
                     <i class="fas fa-trophy text-4xl mb-4"></i>
-                    <p>Walang mga score pa. Maging unang manlalaro!</p>
+                    <p data-i18n='{"en":"No scores yet. Be the first player!","fil":"Walang mga score pa. Maging unang manlalaro!"}'>Walang mga score pa. Maging unang manlalaro!</p>
                 </div>
             <?php else: ?>
                 <div class="divide-y divide-gray-200">
@@ -151,7 +151,7 @@ $leaderboard = getLeaderboard(null, 3, 0);
         
         <div class="text-center mt-8">
             <a href="leaderboard.php" class="inline-block bg-[#0038A8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#002870] transition">
-                View Full Leaderboard <i class="fas fa-arrow-right ml-2"></i>
+                <span data-i18n='{"en":"View Full Leaderboard","fil":"Tingnan ang Buong Leaderboard"}'>View Full Leaderboard</span> <i class="fas fa-arrow-right ml-2"></i>
             </a>
         </div>
     </div>
@@ -163,12 +163,32 @@ const langToggle = document.getElementById('langToggle');
 const langText = document.getElementById('langText');
 let currentLang = localStorage.getItem('lang') || 'en';
 
-langText.textContent = currentLang === 'en' ? 'English' : 'Filipino';
+// Apply translations to all elements with data-i18n attribute
+function applyTranslations(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+        const translations = JSON.parse(element.getAttribute('data-i18n'));
+        if (translations[lang]) {
+            element.textContent = translations[lang];
+        }
+    });
+}
 
+// Update language toggle button text
+function updateLangButton() {
+    langText.textContent = currentLang === 'en' ? 'English' : 'Filipino';
+}
+
+// Initialize language on page load
+applyTranslations(currentLang);
+updateLangButton();
+
+// Toggle language on button click
 langToggle.addEventListener('click', () => {
     currentLang = currentLang === 'en' ? 'fil' : 'en';
     localStorage.setItem('lang', currentLang);
-    langText.textContent = currentLang === 'en' ? 'English' : 'Filipino';
+    applyTranslations(currentLang);
+    updateLangButton();
 });
 </script>
 

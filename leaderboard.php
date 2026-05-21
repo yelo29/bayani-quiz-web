@@ -91,7 +91,7 @@ $totalPages = ceil($totalScores / $limit);
                                         </p>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-3 py-1 bg-[#0038A8] text-white rounded-full text-xs font-medium">
+                                        <span class="inline-block max-w-[120px] sm:max-w-full px-3 py-1 bg-[#0038A8] text-white rounded-full text-xs font-medium whitespace-nowrap overflow-hidden text-ellipsis">
                                             <?php echo htmlspecialchars($score['category_name']); ?>
                                         </span>
                                     </td>
