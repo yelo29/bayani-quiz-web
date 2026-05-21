@@ -12,7 +12,6 @@ if (!isset($_SESSION['quiz_started'])) {
 $score = $_SESSION['quiz_score'];
 $totalQuestions = count($_SESSION['quiz_questions']);
 $categoryId = $_SESSION['quiz_category_id'];
-$answers = $_SESSION['quiz_answers'];
 $startTime = $_SESSION['quiz_start_time'];
 $timeTaken = time() - $startTime;
 
@@ -49,18 +48,19 @@ if (isset($_SESSION['user_id'])) {
     $xpEarned = calculateXP($score, $totalQuestions, $timeTaken, $heroClass, $categoryId);
 }
 
-// Handle score saving
+// Auto-save for logged-in users
+if (isset($_SESSION['user_id']) && !isset($_SESSION['score_saved'])) {
+    saveScoreWithUser($_SESSION['user_id'], $_SESSION['username'], $categoryId, $score, $totalQuestions, $timeTaken, $xpEarned);
+    updateUserXP($_SESSION['user_id'], $xpEarned);
+    $_SESSION['score_saved'] = true;
+    $_SESSION['saved_player_name'] = $_SESSION['username'];
+}
+
+// Handle score saving for guests
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['player_name'])) {
     $playerName = sanitize($_POST['player_name']);
     if (!empty($playerName)) {
-        if (isset($_SESSION['user_id'])) {
-            // Save with user account
-            saveScoreWithUser($_SESSION['user_id'], $categoryId, $score, $totalQuestions, $timeTaken, $xpEarned);
-            updateUserXP($_SESSION['user_id'], $xpEarned);
-        } else {
-            // Save as guest
-            saveScore($playerName, $categoryId, $score, $totalQuestions, $timeTaken);
-        }
+        saveScore($playerName, $categoryId, $score, $totalQuestions, $timeTaken);
         $_SESSION['score_saved'] = true;
         $_SESSION['saved_player_name'] = $playerName;
         header('Location: results.php');
@@ -88,7 +88,7 @@ require_once 'includes/header.php';
         </div>
 
         <!-- XP Progress Bar (for logged in users) -->
-        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['score_saved'])): ?>
+        <?php if (isset($_SESSION['user_id'])): ?>
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
             <h3 class="text-xl font-bold text-[#0038A8] mb-4">XP Earned</h3>
             <div class="flex items-center justify-between mb-4">
@@ -125,15 +125,15 @@ require_once 'includes/header.php';
         </div>
         <?php endif; ?>
 
-        <!-- Save Score Form -->
-        <?php if (!isset($_SESSION['score_saved'])): ?>
+        <!-- Save Score Form (for guests only) -->
+        <?php if (!isset($_SESSION['user_id']) && !isset($_SESSION['score_saved'])): ?>
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
             <h3 class="text-xl font-bold text-[#0038A8] mb-4">Save Your Score</h3>
             <form method="POST" action="results.php">
                 <div class="flex gap-4">
-                    <input type="text" 
-                           name="player_name" 
-                           placeholder="Enter your name" 
+                    <input type="text"
+                           name="player_name"
+                           placeholder="Enter your name"
                            required
                            maxlength="80"
                            class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-[#0038A8] focus:outline-none transition">
@@ -143,7 +143,7 @@ require_once 'includes/header.php';
                 </div>
             </form>
         </div>
-        <?php else: ?>
+        <?php elseif (isset($_SESSION['score_saved'])): ?>
         <div class="bg-green-50 border-2 border-green-500 rounded-2xl p-6 mb-6 text-center">
             <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
             <p class="text-green-700 font-bold">Score saved as <?php echo htmlspecialchars($_SESSION['saved_player_name']); ?>!</p>
@@ -156,8 +156,10 @@ require_once 'includes/header.php';
             <div class="space-y-4">
                 <?php foreach ($_SESSION['quiz_questions'] as $index => $question): ?>
                     <?php
-                    $answer = $answers[$index] ?? null;
-                    $isCorrect = $answer && $answer['selected'] === $answer['correct'];
+                    $answer = $_SESSION['quiz_answers'][$question['id']] ?? null;
+                    $correctOptionLower = strtolower($question['correct_option']);
+                    $selectedOptionLower = $answer ? strtolower($answer['selected']) : '';
+                    $isCorrect = $answer && $selectedOptionLower === $correctOptionLower;
                     ?>
                     <div class="border-2 <?php echo $isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'; ?> rounded-xl p-4">
                         <div class="flex items-start gap-4">
@@ -169,16 +171,16 @@ require_once 'includes/header.php';
                                     <?php echo ($index + 1); ?>. <?php echo htmlspecialchars($question['question']); ?>
                                 </p>
                                 <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <div class="<?php echo $question['correct_option'] === 'a' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
+                                    <div class="<?php echo $correctOptionLower === 'a' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
                                         A. <?php echo htmlspecialchars($question['option_a']); ?>
                                     </div>
-                                    <div class="<?php echo $question['correct_option'] === 'b' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
+                                    <div class="<?php echo $correctOptionLower === 'b' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
                                         B. <?php echo htmlspecialchars($question['option_b']); ?>
                                     </div>
-                                    <div class="<?php echo $question['correct_option'] === 'c' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
+                                    <div class="<?php echo $correctOptionLower === 'c' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
                                         C. <?php echo htmlspecialchars($question['option_c']); ?>
                                     </div>
-                                    <div class="<?php echo $question['correct_option'] === 'd' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
+                                    <div class="<?php echo $correctOptionLower === 'd' ? 'text-green-600 font-bold' : 'text-gray-600'; ?>">
                                         D. <?php echo htmlspecialchars($question['option_d']); ?>
                                     </div>
                                 </div>

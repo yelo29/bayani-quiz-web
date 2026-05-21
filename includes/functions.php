@@ -31,13 +31,13 @@ function saveScore(string $name, int $categoryId, int $score, int $total, int $t
     return $stmt->execute([$name, $categoryId, $score, $total, $timeTaken]);
 }
 
-function saveScoreWithUser(int $userId, int $categoryId, int $score, int $total, int $timeTaken, int $xpEarned): bool {
+function saveScoreWithUser(int $userId, string $username, int $categoryId, int $score, int $total, int $timeTaken, int $xpEarned): bool {
     $pdo = getDB();
     $stmt = $pdo->prepare("
         INSERT INTO scores (user_id, player_name, category_id, score, total_questions, time_taken, xp_earned)
-        VALUES (?, (SELECT username FROM users WHERE id = ?), ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
-    return $stmt->execute([$userId, $userId, $categoryId, $score, $total, $timeTaken, $xpEarned]);
+    return $stmt->execute([$userId, $username, $categoryId, $score, $total, $timeTaken, $xpEarned]);
 }
 
 function getLeaderboard(int $categoryId = null, int $limit = 10, int $offset = 0, string $sortBy = 'score'): array {
@@ -57,7 +57,7 @@ function getLeaderboard(int $categoryId = null, int $limit = 10, int $offset = 0
             $stmt->execute([$limit, $offset]);
         } else {
             $stmt = $pdo->prepare("
-                SELECT s.*, c.name as category_name, u.username, u.hero_class, u.level, u.xp
+                SELECT s.*, COALESCE(s.player_name, u.username) as display_name, u.hero_class, u.level, u.xp, c.name as category_name
                 FROM scores s
                 LEFT JOIN users u ON s.user_id = u.id
                 LEFT JOIN categories c ON s.category_id = c.id
@@ -80,7 +80,7 @@ function getLeaderboard(int $categoryId = null, int $limit = 10, int $offset = 0
             $stmt->execute([$categoryId, $limit, $offset]);
         } else {
             $stmt = $pdo->prepare("
-                SELECT s.*, c.name as category_name, u.username, u.hero_class, u.level, u.xp
+                SELECT s.*, COALESCE(s.player_name, u.username) as display_name, u.hero_class, u.level, u.xp, c.name as category_name
                 FROM scores s
                 LEFT JOIN users u ON s.user_id = u.id
                 LEFT JOIN categories c ON s.category_id = c.id

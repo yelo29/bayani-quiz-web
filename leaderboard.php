@@ -104,7 +104,7 @@ $totalPages = ceil($totalScores / $limit);
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="font-semibold text-gray-800">
-                                            <?php echo htmlspecialchars($score['username'] ?? $score['player_name']); ?>
+                                            <?php echo htmlspecialchars($score['display_name'] ?? $score['player_name'] ?? $score['username'] ?? 'Anonymous'); ?>
                                         </p>
                                     </td>
                                     <td class="px-6 py-4">
