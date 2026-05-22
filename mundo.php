@@ -30,14 +30,6 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// Get enemies for selected region
-$selectedRegionId = isset($_GET['region_id']) ? (int)$_GET['region_id'] : null;
-$enemies = [];
-if ($selectedRegionId) {
-    $stmt = $pdo->prepare("SELECT * FROM enemies WHERE region_id = ? ORDER BY id ASC");
-    $stmt->execute([$selectedRegionId]);
-    $enemies = $stmt->fetchAll();
-}
 
 require_once 'includes/header.php';
 ?>
@@ -129,7 +121,7 @@ require_once 'includes/header.php';
                                 <i class="fas fa-lock mr-2"></i> Nakakandado (Level <?php echo $region['min_level']; ?>)
                             </button>
                         <?php else: ?>
-                            <a href="mundo.php?region_id=<?php echo $region['id']; ?>" class="block w-full bg-[#0038A8] text-white py-3 rounded-xl font-bold text-center hover:bg-[#002870] transition">
+                            <a href="rehiyon.php?region_id=<?php echo $region['id']; ?>" class="block w-full bg-[#0038A8] text-white py-3 rounded-xl font-bold text-center hover:bg-[#002870] transition">
                                 <i class="fas fa-sword mr-2"></i> Pumunta sa Rehiyon
                             </a>
                         <?php endif; ?>
@@ -137,56 +129,6 @@ require_once 'includes/header.php';
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <!-- Enemies List (when region is selected) -->
-        <?php if ($selectedRegionId && !empty($enemies)): ?>
-            <?php
-            $selectedRegion = null;
-            foreach ($regions as $r) {
-                if ($r['id'] === $selectedRegionId) {
-                    $selectedRegion = $r;
-                    break;
-                }
-            }
-            ?>
-            <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-[#0038A8] mb-1"><?php echo htmlspecialchars($selectedRegion['name']); ?></h2>
-                        <p class="text-gray-600">Piliin ang iyong kaaway</p>
-                    </div>
-                    <a href="mundo.php" class="text-gray-600 hover:text-[#0038A8] transition">
-                        <i class="fas fa-times text-xl"></i>
-                    </a>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <?php foreach ($enemies as $enemy): ?>
-                        <div class="border-2 border-gray-200 rounded-xl p-4 hover:border-[#0038A8] transition">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800"><?php echo htmlspecialchars($enemy['name']); ?></h3>
-                                <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
-                                    <?php echo htmlspecialchars($enemy['era']); ?>
-                                </span>
-                            </div>
-                            
-                            <div class="flex gap-4 text-sm text-gray-600 mb-3">
-                                <div><i class="fas fa-heart text-red-500 mr-1"></i> <?php echo $enemy['hp']; ?> HP</div>
-                                <div><i class="fas fa-fist-raised text-orange-500 mr-1"></i> <?php echo $enemy['attack']; ?> ATK</div>
-                                <div><i class="fas fa-shield-alt text-blue-500 mr-1"></i> <?php echo $enemy['defense']; ?> DEF</div>
-                            </div>
-                            
-                            <p class="text-gray-600 text-sm mb-4"><?php echo htmlspecialchars($enemy['description']); ?></p>
-                            
-                            <a href="battle.php?region_id=<?php echo $selectedRegionId; ?>&enemy_id=<?php echo $enemy['id']; ?>" 
-                               class="block w-full bg-[#CE1126] text-white py-2 rounded-xl font-bold text-center hover:bg-[#a00d1a] transition">
-                                <i class="fas fa-sword mr-2"></i> Labanan
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        <?php endif; ?>
 
         <!-- Back to Home -->
         <div class="text-center mt-8">
