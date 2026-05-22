@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once 'includes/functions.php';
 
 // Redirect to login if not logged in
@@ -99,13 +101,30 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$_SESSION['user_id'], $enemyId, $xpEarned, $createdAt]);
 
-// Update region progress
+// Update region progress (mark as completed when all unique enemies defeated)
+// Get total enemies in this region
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM enemies WHERE region_id = ?");
+$stmt->execute([$regionId]);
+$totalEnemies = $stmt->fetchColumn();
+
+// Get unique enemies defeated in this region
 $stmt = $pdo->prepare("
-    INSERT INTO region_progress (user_id, region_id, battles_won)
-    VALUES (?, ?, 1)
-    ON DUPLICATE KEY UPDATE battles_won = battles_won + 1
+    SELECT COUNT(DISTINCT enemy_id) as unique_defeated
+    FROM battle_log
+    WHERE user_id = ? AND enemy_id IN (SELECT id FROM enemies WHERE region_id = ?) AND won = 1
 ");
 $stmt->execute([$_SESSION['user_id'], $regionId]);
+$uniqueDefeated = $stmt->fetchColumn() ?: 0;
+
+// Mark as completed if all enemies defeated
+$isCompleted = $uniqueDefeated >= $totalEnemies ? 1 : 0;
+
+$stmt = $pdo->prepare("
+    INSERT INTO region_progress (user_id, region_id, battles_won, completed)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE battles_won = battles_won + 1, completed = ?
+");
+$stmt->execute([$_SESSION['user_id'], $regionId, 1, $isCompleted, $isCompleted]);
 
 // Clear battle session
 unset($_SESSION['battle_started']);

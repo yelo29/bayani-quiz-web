@@ -20,13 +20,25 @@ foreach ($regions as $region) {
     $regionEnemyCounts[$region['id']] = $stmt->fetchColumn();
 }
 
-// Get player progress per region
+// Get player progress per region (unique enemies defeated)
 $playerProgress = [];
 if (isset($_SESSION['user_id'])) {
-    $stmt = $pdo->prepare("SELECT region_id, battles_won, completed FROM region_progress WHERE user_id = ?");
+    $stmt = $pdo->prepare("SELECT region_id, completed FROM region_progress WHERE user_id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     while ($row = $stmt->fetch()) {
         $playerProgress[$row['region_id']] = $row;
+    }
+
+    // Get unique enemies defeated per region
+    $uniqueDefeatedPerRegion = [];
+    foreach ($regions as $region) {
+        $stmt = $pdo->prepare("
+            SELECT COUNT(DISTINCT enemy_id) as unique_defeated
+            FROM battle_log
+            WHERE user_id = ? AND enemy_id IN (SELECT id FROM enemies WHERE region_id = ?) AND won = 1
+        ");
+        $stmt->execute([$_SESSION['user_id'], $region['id']]);
+        $uniqueDefeatedPerRegion[$region['id']] = $stmt->fetchColumn() ?: 0;
     }
 }
 
@@ -59,7 +71,7 @@ require_once 'includes/header.php';
                         <p class="text-sm text-gray-600">XP</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-bold text-[#0038A8]"><?php echo $_SESSION['xp'] ?? 0; ?></p>
+                        <p class="text-2xl font-bold text-[#0038A8]"><?php echo $_SESSION['player_hp'] ?? 100; ?></p>
                         <p class="text-sm text-gray-600">HP</p>
                     </div>
                 </div>
@@ -112,7 +124,7 @@ require_once 'includes/header.php';
                                 <i class="fas fa-skull mr-1"></i> <?php echo $enemyCount; ?> Kaaway
                             </div>
                             <div class="text-sm text-gray-600">
-                                <i class="fas fa-medal mr-1"></i> <?php echo $progress['battles_won']; ?> Panalo
+                                <i class="fas fa-medal mr-1"></i> <?php echo $uniqueDefeatedPerRegion[$region['id']] ?? 0; ?>/<?php echo $enemyCount; ?> Panalo
                             </div>
                         </div>
 

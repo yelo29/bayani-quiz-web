@@ -34,10 +34,28 @@ $stmt = $pdo->prepare("SELECT * FROM enemies WHERE region_id = ? ORDER BY id ASC
 $stmt->execute([$regionId]);
 $enemies = $stmt->fetchAll();
 
-// Get player progress for this region
-$stmt = $pdo->prepare("SELECT battles_won, completed FROM region_progress WHERE user_id = ? AND region_id = ?");
+// Get defeated enemy IDs for this region
+$stmt = $pdo->prepare("
+    SELECT DISTINCT enemy_id
+    FROM battle_log
+    WHERE user_id = ? AND enemy_id IN (SELECT id FROM enemies WHERE region_id = ?) AND won = 1
+");
 $stmt->execute([$_SESSION['user_id'], $regionId]);
-$progress = $stmt->fetch() ?: ['battles_won' => 0, 'completed' => 0];
+$defeatedEnemyIds = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
+// Get player progress for this region (count unique enemies defeated)
+$stmt = $pdo->prepare("
+    SELECT COUNT(DISTINCT enemy_id) as unique_enemies_defeated
+    FROM battle_log
+    WHERE user_id = ? AND enemy_id IN (SELECT id FROM enemies WHERE region_id = ?) AND won = 1
+");
+$stmt->execute([$_SESSION['user_id'], $regionId]);
+$uniqueDefeated = $stmt->fetchColumn() ?: 0;
+
+// Get completed status from region_progress
+$stmt = $pdo->prepare("SELECT completed FROM region_progress WHERE user_id = ? AND region_id = ?");
+$stmt->execute([$_SESSION['user_id'], $regionId]);
+$progress = $stmt->fetch() ?: ['completed' => 0];
 
 // Region-specific data (maps, history background, enemy images)
 $regionData = [
@@ -174,7 +192,7 @@ require_once 'includes/header.php';
                         <i class="fas fa-skull mr-2"></i> Mga Kaaway
                     </h2>
                     <div class="text-sm text-gray-600">
-                        <i class="fas fa-medal mr-1"></i> <?php echo $progress['battles_won']; ?>/<?php echo count($enemies); ?> Panalo
+                        <i class="fas fa-medal mr-1"></i> <?php echo $uniqueDefeated; ?>/<?php echo count($enemies); ?> Panalo
                     </div>
                 </div>
 
@@ -191,9 +209,16 @@ require_once 'includes/header.php';
                             <div class="p-4">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-bold text-gray-800 text-lg"><?php echo htmlspecialchars($enemy['name']); ?></h3>
-                                    <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
-                                        <?php echo htmlspecialchars($enemy['era']); ?>
-                                    </span>
+                                    <div class="flex gap-2">
+                                        <?php if (in_array($enemy['id'], $defeatedEnemyIds)): ?>
+                                            <span class="px-2 py-1 bg-green-500 text-white rounded-full text-xs font-bold">
+                                                <i class="fas fa-check mr-1"></i> Talo
+                                            </span>
+                                        <?php endif; ?>
+                                        <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-xs font-bold">
+                                            <?php echo htmlspecialchars($enemy['era']); ?>
+                                        </span>
+                                    </div>
                                 </div>
                                 
                                 <div class="flex gap-4 text-sm text-gray-600 mb-3">

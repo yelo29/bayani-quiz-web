@@ -116,7 +116,8 @@ try {
             battles_won INT DEFAULT 0,
             completed TINYINT DEFAULT 0,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-            FOREIGN KEY (region_id) REFERENCES regions(id)
+            FOREIGN KEY (region_id) REFERENCES regions(id),
+            UNIQUE KEY unique_user_region (user_id, region_id)
         )
     ");
     echo "✓ region_progress table created\n\n";
@@ -150,11 +151,15 @@ try {
 
     // Add UNIQUE KEY to regions.name
     echo "Adding UNIQUE KEY to regions.name...\n";
-    $pdo->exec("
-        ALTER TABLE regions 
-        ADD UNIQUE KEY unique_name (name)
-    ");
-    echo "✓ UNIQUE KEY added to regions.name\n\n";
+    try {
+        $pdo->exec("
+            ALTER TABLE regions
+            ADD UNIQUE KEY unique_name (name)
+        ");
+        echo "✓ UNIQUE KEY added to regions.name\n\n";
+    } catch (PDOException $e) {
+        echo "⚠ UNIQUE KEY may already exist on regions.name\n\n";
+    }
 
     // Add streak columns to users table
     echo "Adding streak columns to users table...\n";
@@ -274,6 +279,42 @@ try {
     echo "Adding battle_warning_dismissed column...\n";
     $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS battle_warning_dismissed TINYINT DEFAULT 0");
     echo "✓ battle_warning_dismissed column added\n\n";
+
+    // Add unique constraint to region_progress table
+    echo "Adding unique constraint to region_progress table...\n";
+    try {
+        $pdo->exec("ALTER TABLE region_progress ADD UNIQUE KEY unique_user_region (user_id, region_id)");
+        echo "✓ Unique constraint added to region_progress\n\n";
+    } catch (PDOException $e) {
+        echo "⚠ Unique constraint may already exist or there are duplicates to clean up\n\n";
+        // Clean up duplicates if they exist
+        echo "Cleaning up duplicate region_progress entries...\n";
+        $pdo->exec("
+            DELETE rp1 FROM region_progress rp1
+            INNER JOIN region_progress rp2
+            WHERE rp1.id > rp2.id
+            AND rp1.user_id = rp2.user_id
+            AND rp1.region_id = rp2.region_id
+        ");
+        echo "✓ Duplicates cleaned up\n";
+        try {
+            $pdo->exec("ALTER TABLE region_progress ADD UNIQUE KEY unique_user_region (user_id, region_id)");
+            echo "✓ Unique constraint added to region_progress\n\n";
+        } catch (PDOException $e2) {
+            echo "⚠ Could not add unique constraint: " . $e2->getMessage() . "\n\n";
+        }
+    }
+
+    // Clean up duplicate enemies
+    echo "Cleaning up duplicate enemies...\n";
+    $pdo->exec("
+        DELETE e1 FROM enemies e1
+        INNER JOIN enemies e2
+        WHERE e1.id > e2.id
+        AND e1.name = e2.name
+        AND e1.region_id = e2.region_id
+    ");
+    echo "✓ Duplicate enemies cleaned up\n\n";
 
     // Insert seed data for items
     echo "Inserting seed data for items...\n";

@@ -2,7 +2,9 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once 'includes/functions.php';
 
 // Redirect to login if not logged in
@@ -36,8 +38,20 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
-// Initialize battle state if not set
+// Initialize battle state (always refresh from database to ensure HP is current)
 if (!isset($_SESSION['battle_started']) || $_SESSION['battle_enemy_id'] !== $enemyId) {
+    // Clear any existing battle session data
+    unset($_SESSION['battle_started']);
+    unset($_SESSION['battle_region_id']);
+    unset($_SESSION['battle_enemy_id']);
+    unset($_SESSION['battle_player_hp']);
+    unset($_SESSION['battle_player_max_hp']);
+    unset($_SESSION['battle_enemy_hp']);
+    unset($_SESSION['battle_enemy_max_hp']);
+    unset($_SESSION['battle_log']);
+    unset($_SESSION['battle_used_questions']);
+
+    // Initialize fresh battle state from database
     $_SESSION['battle_started'] = true;
     $_SESSION['battle_region_id'] = $regionId;
     $_SESSION['battle_enemy_id'] = $enemyId;
