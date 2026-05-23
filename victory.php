@@ -71,16 +71,18 @@ $_SESSION['coins'] = ($user['coins'] ?? 0) + $coinsEarned;
 $itemDropped = null;
 $dropChance = rand(1, 100);
 if ($dropChance <= 30) {
-    // Get random item
+    // Get random item that matches user's hero class or is universal
+    $userHeroClass = $_SESSION['hero_class'] ?? null;
     $stmt = $pdo->prepare("
-        SELECT * FROM items 
-        WHERE region_id IS NULL OR region_id = ?
-        ORDER BY RAND() 
+        SELECT * FROM items
+        WHERE (region_id IS NULL OR region_id = ?)
+        AND (hero_class IS NULL OR hero_class = ?)
+        ORDER BY RAND()
         LIMIT 1
     ");
-    $stmt->execute([$regionId]);
+    $stmt->execute([$regionId, $userHeroClass]);
     $item = $stmt->fetch();
-    
+
     if ($item) {
         // Add to inventory
         $stmt = $pdo->prepare("

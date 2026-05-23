@@ -15,29 +15,7 @@ if (isset($_SESSION['hero_class']) && $_SESSION['hero_class']) {
     exit;
 }
 
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $hero_class = $_POST['hero_class'] ?? '';
-    
-    if (!in_array($hero_class, ['mandirigma', 'lakambini', 'mangkukulam'])) {
-        $error = 'Invalid hero class selected.';
-    } else {
-        // Update user in database
-        $pdo = getDB();
-        $stmt = $pdo->prepare("UPDATE users SET hero_class = ? WHERE id = ?");
-        
-        if ($stmt->execute([$hero_class, $_SESSION['user_id']])) {
-            $_SESSION['hero_class'] = $hero_class;
-            header('Location: profile.php');
-            exit;
-        } else {
-            $error = 'Failed to select hero. Please try again.';
-        }
-    }
-}
-
-// Hero class definitions
+// Hero class definitions with base stats
 $heroes = [
     'mandirigma' => [
         'name' => 'Mandirigma',
@@ -45,7 +23,10 @@ $heroes = [
         'description' => 'Bonus XP on history questions. Strong and brave, the Mandirigma excels in battles of knowledge about Philippine history.',
         'color' => '#CE1126',
         'icon' => 'fa-shield-alt',
-        'bonus' => '+5 XP per history question'
+        'bonus' => '+5 XP per history question',
+        'base_attack' => 15,
+        'base_defense' => 8,
+        'base_speed' => 8
     ],
     'lakambini' => [
         'name' => 'Lakambini',
@@ -53,7 +34,10 @@ $heroes = [
         'description' => 'Bonus XP on perfect scores. Wise and learned, the Lakambini rewards excellence and perfect knowledge.',
         'color' => '#0038A8',
         'icon' => 'fa-book',
-        'bonus' => '+20 XP for perfect scores'
+        'bonus' => '+20 XP for perfect scores',
+        'base_attack' => 12,
+        'base_defense' => 12,
+        'base_speed' => 10
     ],
     'mangkukulam' => [
         'name' => 'Mangkukulam',
@@ -61,9 +45,45 @@ $heroes = [
         'description' => 'Bonus XP on speed. Quick and clever, the Mangkukulam rewards fast thinkers and swift answers.',
         'color' => '#FCD116',
         'icon' => 'fa-bolt',
-        'bonus' => '+10 XP for finishing under 2 minutes'
+        'bonus' => '+10 XP for finishing under 2 minutes',
+        'base_attack' => 10,
+        'base_defense' => 8,
+        'base_speed' => 15
     ]
 ];
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $hero_class = $_POST['hero_class'] ?? '';
+
+    if (!in_array($hero_class, ['mandirigma', 'lakambini', 'mangkukulam'])) {
+        $error = 'Invalid hero class selected.';
+    } else {
+        // Update user in database with hero class and base stats
+        $pdo = getDB();
+        $hero = $heroes[$hero_class];
+        $stmt = $pdo->prepare("
+            UPDATE users
+            SET hero_class = ?,
+                base_attack = ?,
+                base_defense = ?,
+                base_speed = ?
+            WHERE id = ?
+        ");
+
+        if ($stmt->execute([$hero_class, $hero['base_attack'], $hero['base_defense'], $hero['base_speed'], $_SESSION['user_id']])) {
+            $_SESSION['hero_class'] = $hero_class;
+            $_SESSION['base_attack'] = $hero['base_attack'];
+            $_SESSION['base_defense'] = $hero['base_defense'];
+            $_SESSION['base_speed'] = $hero['base_speed'];
+            header('Location: profile.php');
+            exit;
+        } else {
+            $error = 'Failed to select hero. Please try again.';
+        }
+    }
+}
 ?>
 
 <main class="min-h-screen bg-gray-50 py-12 px-4">

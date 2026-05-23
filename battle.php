@@ -96,26 +96,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     // 5. Now calculate damage
     if ($isCorrect) {
-        $base_attack = 10 + ($player_level * 5);
-        
-        if ($timeTaken <= 5) { 
-            $speedBonus = 20; 
-            $speedLabel = 'Kidlat! ⚡ +20'; 
+        // Use class-specific base attack from session
+        $base_attack = ($_SESSION['base_attack'] ?? 10) + ($player_level * 5);
+
+        if ($timeTaken <= 5) {
+            $speedBonus = 20;
+            $speedLabel = 'Kidlat! ⚡ +20';
             $speedClass = 'text-yellow-500';
-        } elseif ($timeTaken <= 10) { 
-            $speedBonus = 10; 
-            $speedLabel = 'Mabilis! 🔥 +10'; 
+        } elseif ($timeTaken <= 10) {
+            $speedBonus = 10;
+            $speedLabel = 'Mabilis! 🔥 +10';
             $speedClass = 'text-orange-500';
-        } elseif ($timeTaken <= 20) { 
-            $speedBonus = 0; 
-            $speedLabel = 'Normal hit'; 
+        } elseif ($timeTaken <= 20) {
+            $speedBonus = 0;
+            $speedLabel = 'Normal hit';
             $speedClass = 'text-white';
-        } else { 
-            $speedBonus = -5; 
-            $speedLabel = 'Mabagal... -5'; 
+        } else {
+            $speedBonus = -5;
+            $speedLabel = 'Mabagal... -5';
             $speedClass = 'text-gray-400';
         }
-        
+
         $damage = max(5, ($base_attack + $speedBonus + $weaponBonus) - $enemy_defense);
         $_SESSION['battle_enemy_hp'] -= $damage;
 
@@ -125,7 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             'speedClass' => $speedClass
         ];
     } else {
-        $base_defense = 5 + ($player_level * 2);
+        // Use class-specific base defense from session
+        $base_defense = ($_SESSION['base_defense'] ?? 5) + ($player_level * 2);
         $total_defense = $base_defense + $armorBonus;
         $enemy_damage = max(5, $enemy_attack - $total_defense);
         $_SESSION['battle_player_hp'] -= $enemy_damage;

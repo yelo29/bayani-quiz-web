@@ -20,109 +20,159 @@ $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
+// Get class-specific items for the user's hero class
+$userHeroClass = $_SESSION['hero_class'] ?? null;
+$stmt = $pdo->prepare("
+    SELECT * FROM items
+    WHERE (hero_class IS NULL OR hero_class = ?)
+    AND type IN ('weapon', 'armor')
+    ORDER BY power ASC
+");
+$stmt->execute([$userHeroClass]);
+$classItems = $stmt->fetchAll();
+
 $message = '';
 $messageType = '';
 
 // Handle purchase
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['item'])) {
-    $item = $_POST['item'];
-    $cost = 0;
-    $effect = '';
-    
-    switch ($item) {
-        case 'small_potion':
-            $cost = 30;
-            $hpRestore = 25;
-            if ($user['coins'] >= $cost) {
-                $newHp = min($user['player_max_hp'], $user['player_hp'] + $hpRestore);
-                $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = ? WHERE id = ?")
-                    ->execute([$cost, $newHp, $_SESSION['user_id']]);
-                $_SESSION['coins'] -= $cost;
-                $_SESSION['player_hp'] = $newHp;
-                $message = "Nabili mo ang Small HP Potion! +25 HP";
-                $messageType = 'success';
-                $user['coins'] -= $cost;
-                $user['player_hp'] = $newHp;
-            } else {
-                $message = "Kulang ang iyong mga barya!";
-                $messageType = 'error';
-            }
-            break;
-            
-        case 'large_potion':
-            $cost = 60;
-            $hpRestore = 50;
-            if ($user['coins'] >= $cost) {
-                $newHp = min($user['player_max_hp'], $user['player_hp'] + $hpRestore);
-                $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = ? WHERE id = ?")
-                    ->execute([$cost, $newHp, $_SESSION['user_id']]);
-                $_SESSION['coins'] -= $cost;
-                $_SESSION['player_hp'] = $newHp;
-                $message = "Nabili mo ang Large HP Potion! +50 HP";
-                $messageType = 'success';
-                $user['coins'] -= $cost;
-                $user['player_hp'] = $newHp;
-            } else {
-                $message = "Kulang ang iyong mga barya!";
-                $messageType = 'error';
-            }
-            break;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Handle buying class-specific items from database
+    if (isset($_POST['buy_item_id']) && isset($_POST['buy_item_cost'])) {
+        $itemId = (int)$_POST['buy_item_id'];
+        $cost = (int)$_POST['buy_item_cost'];
 
-        case 'full_restore':
-            $cost = 150;
-            if ($user['coins'] >= $cost) {
-                $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = player_max_hp WHERE id = ?")
-                    ->execute([$cost, $_SESSION['user_id']]);
-                $_SESSION['coins'] -= $cost;
-                $_SESSION['player_hp'] = $user['player_max_hp'];
-                $message = "Nabili mo ang Full Restore! Full HP";
-                $messageType = 'success';
-                $user['coins'] -= $cost;
-                $user['player_hp'] = $user['player_max_hp'];
-            } else {
-                $message = "Kulang ang iyong mga barya!";
-                $messageType = 'error';
-            }
-            break;
+        // Verify item exists and is available for user's class
+        $stmt = $pdo->prepare("
+            SELECT * FROM items
+            WHERE id = ?
+            AND (hero_class IS NULL OR hero_class = ?)
+        ");
+        $stmt->execute([$itemId, $userHeroClass]);
+        $item = $stmt->fetch();
 
-        case 'lucky_charm':
-            $cost = 200;
-            if ($user['coins'] >= $cost) {
-                // Add lucky charm to inventory
-                // First check if lucky charm item exists, if not create it
-                $stmt = $pdo->prepare("SELECT id FROM items WHERE name = 'Lucky Charm' LIMIT 1");
-                $stmt->execute();
-                $charmItem = $stmt->fetch();
+        if ($item && $user['coins'] >= $cost) {
+            // Add to inventory
+            $stmt = $pdo->prepare("
+                INSERT INTO inventory (user_id, item_id, equipped)
+                VALUES (?, ?, 0)
+            ");
+            $stmt->execute([$_SESSION['user_id'], $itemId]);
 
-                if (!$charmItem) {
-                    $stmt = $pdo->prepare("
-                        INSERT INTO items (name, type, power, rarity, description, region_id)
-                        VALUES ('Lucky Charm', 'scroll', 50, 'rare', 'Doubles damage on correct answers for next battle', NULL)
-                    ");
-                    $stmt->execute();
-                    $charmItemId = $pdo->lastInsertId();
+            // Deduct coins
+            $pdo->prepare("UPDATE users SET coins = coins - ? WHERE id = ?")
+                ->execute([$cost, $_SESSION['user_id']]);
+            $_SESSION['coins'] -= $cost;
+            $user['coins'] -= $cost;
+
+            $message = "Nabili mo ang {$item['name']}!";
+            $messageType = 'success';
+        } else {
+            $message = "Kulang ang iyong mga barya o hindi available ang item!";
+            $messageType = 'error';
+        }
+    }
+
+    // Handle buying hardcoded items
+    if (isset($_POST['item'])) {
+        $item = $_POST['item'];
+        $cost = 0;
+        $effect = '';
+
+        switch ($item) {
+            case 'small_potion':
+                $cost = 30;
+                $hpRestore = 25;
+                if ($user['coins'] >= $cost) {
+                    $newHp = min($user['player_max_hp'], $user['player_hp'] + $hpRestore);
+                    $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = ? WHERE id = ?")
+                        ->execute([$cost, $newHp, $_SESSION['user_id']]);
+                    $_SESSION['coins'] -= $cost;
+                    $_SESSION['player_hp'] = $newHp;
+                    $message = "Nabili mo ang Small HP Potion! +25 HP";
+                    $messageType = 'success';
+                    $user['coins'] -= $cost;
+                    $user['player_hp'] = $newHp;
                 } else {
-                    $charmItemId = $charmItem['id'];
+                    $message = "Kulang ang iyong mga barya!";
+                    $messageType = 'error';
                 }
+                break;
 
-                // Add to inventory
-                $stmt = $pdo->prepare("
-                    INSERT INTO inventory (user_id, item_id, equipped)
-                    VALUES (?, ?, 0)
-                ");
-                $stmt->execute([$_SESSION['user_id'], $charmItemId]);
+            case 'large_potion':
+                $cost = 60;
+                $hpRestore = 50;
+                if ($user['coins'] >= $cost) {
+                    $newHp = min($user['player_max_hp'], $user['player_hp'] + $hpRestore);
+                    $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = ? WHERE id = ?")
+                        ->execute([$cost, $newHp, $_SESSION['user_id']]);
+                    $_SESSION['coins'] -= $cost;
+                    $_SESSION['player_hp'] = $newHp;
+                    $message = "Nabili mo ang Large HP Potion! +50 HP";
+                    $messageType = 'success';
+                    $user['coins'] -= $cost;
+                    $user['player_hp'] = $newHp;
+                } else {
+                    $message = "Kulang ang iyong mga barya!";
+                    $messageType = 'error';
+                }
+                break;
 
-                $pdo->prepare("UPDATE users SET coins = coins - ? WHERE id = ?")
-                    ->execute([$cost, $_SESSION['user_id']]);
-                $_SESSION['coins'] -= $cost;
-                $message = "Nabili mo ang Lucky Charm! 2x damage sa susunod na laban";
-                $messageType = 'success';
-                $user['coins'] -= $cost;
-            } else {
-                $message = "Kulang ang iyong mga barya!";
-                $messageType = 'error';
-            }
-            break;
+            case 'full_restore':
+                $cost = 150;
+                if ($user['coins'] >= $cost) {
+                    $pdo->prepare("UPDATE users SET coins = coins - ?, player_hp = player_max_hp WHERE id = ?")
+                        ->execute([$cost, $_SESSION['user_id']]);
+                    $_SESSION['coins'] -= $cost;
+                    $_SESSION['player_hp'] = $user['player_max_hp'];
+                    $message = "Nabili mo ang Full Restore! Full HP";
+                    $messageType = 'success';
+                    $user['coins'] -= $cost;
+                    $user['player_hp'] = $user['player_max_hp'];
+                } else {
+                    $message = "Kulang ang iyong mga barya!";
+                    $messageType = 'error';
+                }
+                break;
+
+            case 'lucky_charm':
+                $cost = 200;
+                if ($user['coins'] >= $cost) {
+                    // Add lucky charm to inventory
+                    // First check if lucky charm item exists, if not create it
+                    $stmt = $pdo->prepare("SELECT id FROM items WHERE name = 'Lucky Charm' LIMIT 1");
+                    $stmt->execute();
+                    $charmItem = $stmt->fetch();
+
+                    if (!$charmItem) {
+                        $stmt = $pdo->prepare("
+                            INSERT INTO items (name, type, power, rarity, description, region_id)
+                            VALUES ('Lucky Charm', 'scroll', 50, 'rare', 'Doubles damage on correct answers for next battle', NULL)
+                        ");
+                        $stmt->execute();
+                        $charmItemId = $pdo->lastInsertId();
+                    } else {
+                        $charmItemId = $charmItem['id'];
+                    }
+
+                    // Add to inventory
+                    $stmt = $pdo->prepare("
+                        INSERT INTO inventory (user_id, item_id, equipped)
+                        VALUES (?, ?, 0)
+                    ");
+                    $stmt->execute([$_SESSION['user_id'], $charmItemId]);
+
+                    $pdo->prepare("UPDATE users SET coins = coins - ? WHERE id = ?")
+                        ->execute([$cost, $_SESSION['user_id']]);
+                    $_SESSION['coins'] -= $cost;
+                    $message = "Nabili mo ang Lucky Charm! 2x damage sa susunod na laban";
+                    $messageType = 'success';
+                    $user['coins'] -= $cost;
+                } else {
+                    $message = "Kulang ang iyong mga barya!";
+                    $messageType = 'error';
+                }
+                break;
+        }
     }
 }
 
@@ -241,6 +291,63 @@ require_once 'includes/header.php';
                         </button>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <!-- Class-Specific Equipment -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-[#0038A8] mb-4">
+                <i class="fas fa-shield-alt mr-2"></i>
+                Kasanayang Equipment
+                <?php if ($userHeroClass): ?>
+                    <span class="text-sm font-normal text-gray-600 ml-2">
+                        (Para sa <?php echo ucfirst($userHeroClass); ?>)
+                    </span>
+                <?php endif; ?>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($classItems as $item): ?>
+                    <?php
+                    $cost = $item['power'] * 10; // Cost based on power
+                    $icon = $item['type'] === 'weapon' ? 'fa-sword' : 'fa-shield-alt';
+                    $color = $item['type'] === 'weapon' ? 'red' : 'blue';
+                    $rarityColors = [
+                        'common' => 'gray',
+                        'rare' => 'blue',
+                        'legendary' => 'yellow'
+                    ];
+                    $rarityColor = $rarityColors[$item['rarity']] ?? 'gray';
+                    ?>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 border-2 border-<?php echo $rarityColor; ?>-200 hover:border-<?php echo $rarityColor; ?>-500 transition">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-<?php echo $color; ?>-100 rounded-full flex items-center justify-center">
+                                <i class="fas <?php echo $icon; ?> text-3xl text-<?php echo $color; ?>-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($item['name']); ?></h3>
+                                <p class="text-sm text-gray-600">
+                                    <?php echo ucfirst($item['type']); ?> • Power: <?php echo $item['power']; ?>
+                                    <?php if ($item['hero_class']): ?>
+                                        <span class="text-xs bg-<?php echo $rarityColor; ?>-100 text-<?php echo $rarityColor; ?>-800 px-2 py-1 rounded-full ml-2">
+                                            <?php echo ucfirst($item['hero_class']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4"><?php echo htmlspecialchars($item['description']); ?></p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-yellow-500">🪙 <?php echo $cost; ?></span>
+                            <form method="POST" action="tindahan.php">
+                                <input type="hidden" name="buy_item_id" value="<?php echo $item['id']; ?>">
+                                <input type="hidden" name="buy_item_cost" value="<?php echo $cost; ?>">
+                                <button type="submit" class="bg-<?php echo $color; ?>-500 text-white px-6 py-2 rounded-xl font-bold hover:bg-<?php echo $color; ?>-600 transition">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Bilhin
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
 

@@ -33,7 +33,7 @@ An educational quiz game about Philippine history, heroes, events, and culture. 
 2. Create a MySQL database
 3. Update `includes/db.php` with your database credentials
 4. Upload files to your web server via FTP
-5. Visit `yourdomain.com/admin/seed.php?token=YOUR_SECRET` to seed the database
+5. Visit `???` to seed the database
 6. Delete or disable `seed.php` after seeding
 7. Test all pages on mobile and desktop
 
@@ -44,7 +44,7 @@ An educational quiz game about Philippine history, heroes, events, and culture. 
 3. Update `includes/db.php` with the provided credentials
 4. Connect via FTP using FileZilla (credentials from InfinityFree)
 5. Upload all files to the `htdocs/` folder
-6. Visit `yourdomain.great-site.net/admin/seed.php?token=YOUR_SECRET` to seed the DB
+6. Visit `???` to seed the DB
 7. Delete or disable `seed.php` after seeding
 8. Test all pages on mobile and desktop
 
