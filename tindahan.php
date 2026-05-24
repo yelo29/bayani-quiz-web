@@ -309,7 +309,7 @@ require_once 'includes/header.php';
                 <?php foreach ($classItems as $item): ?>
                     <?php
                     $cost = $item['power'] * 10; // Cost based on power
-                    $icon = $item['type'] === 'weapon' ? 'fa-sword' : 'fa-shield-alt';
+                    $icon = $item['type'] === 'weapon' ? 'fa-solid fa-person-military-rifle' : 'fa-shield-alt';
                     $color = $item['type'] === 'weapon' ? 'red' : 'blue';
                     $rarityColors = [
                         'common' => 'gray',

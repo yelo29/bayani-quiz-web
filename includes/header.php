@@ -113,7 +113,7 @@ require_once __DIR__ . '/translations.php';
                 <!-- Leaderboard Dropdown -->
                 <div class="dropdown relative">
                     <button class="hover:text-yellow-400 transition text-base flex items-center gap-1">
-                        <?php echo t('leaderboard'); ?> 🏆 <i class="fas fa-chevron-down text-xs"></i>
+                        <?php echo t('leaderboard'); ?> <i class="fas fa-chevron-down text-xs"></i>
                     </button>
                     <div class="dropdown-menu absolute top-full left-0 mt-2 bg-yellow-100 rounded-xl shadow-xl min-w-[200px] overflow-hidden">
                         <a href="/leaderboard.php" class="block px-4 py-3 text-[#0038A8] hover:bg-yellow-200 transition">
@@ -175,7 +175,7 @@ require_once __DIR__ . '/translations.php';
 
                 <!-- Leaderboard Section -->
                 <div class="py-2">
-                    <p class="text-yellow-400 font-bold mb-2 px-4"><?php echo t('leaderboard'); ?> 🏆</p>
+                    <p class="text-yellow-400 font-bold mb-2 px-4"><?php echo t('leaderboard'); ?> </p>
                     <a href="/leaderboard.php" class="block py-3 px-4 hover:bg-white/10 rounded-lg transition pl-8">
                         <i class="fas fa-book-open mr-2"></i> <?php echo t('quiz_leaderboard'); ?>
                     </a>

@@ -224,7 +224,7 @@ echo $date->format('F d, Y g:i A'); ?></p>
                 <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white">
-                            <i class="fas fa-sword text-xl"></i>
+                            <i class="fa-solid fa-person-military-rifle text-xl"></i>
                         </div>
                         <div>
                             <p class="font-bold text-gray-800"><?php echo $equippedWeapon ? htmlspecialchars($equippedWeapon['name']) : 'Walang Armas'; ?></p>

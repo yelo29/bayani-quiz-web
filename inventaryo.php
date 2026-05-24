@@ -148,7 +148,7 @@ require_once 'includes/header.php';
                             <div class="flex justify-between items-start mb-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center shadow">
-                                        <i class="fas fa-sword text-xl text-red-600"></i>
+                                        <i class="fa-solid fa-person-military-rifle text-xl text-red-600"></i>
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-gray-800"><?php echo htmlspecialchars($item['name']); ?></h3>

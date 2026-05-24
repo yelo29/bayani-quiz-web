@@ -15,10 +15,8 @@ require_once 'includes/header.php';
             <!-- Quiz Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-book-open text-4xl text-[#0038A8]"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-[#0038A8] mb-2">📝 <?php echo t('quiz_title'); ?></h2>
+                    
+                    <h2 class="text-3xl font-bold text-[#0038A8] mb-2"> <?php echo t('quiz_title'); ?></h2>
                     <p class="text-gray-600"><?php echo t('quiz_desc'); ?></p>
                 </div>
 
@@ -40,10 +38,8 @@ require_once 'includes/header.php';
             <!-- Battle Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-swords text-4xl text-[#CE1126]"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-[#CE1126] mb-2">⚔️ <?php echo t('battle_title'); ?></h2>
+                    
+                    <h2 class="text-3xl font-bold text-[#CE1126] mb-2"> <?php echo t('battle_title'); ?></h2>
                     <p class="text-gray-600"><?php echo t('battle_desc'); ?></p>
                 </div>
 
@@ -66,10 +62,8 @@ require_once 'includes/header.php';
             <!-- Kwento Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-book text-4xl text-purple-600"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-purple-600 mb-2">📖 Kwento Mode</h2>
+                  
+                    <h2 class="text-3xl font-bold text-purple-600 mb-2"> Kwento Mode</h2>
                     <p class="text-gray-600">2D Story RPG - Travel through Philippine history</p>
                 </div>
 
