@@ -12,6 +12,16 @@ require_once __DIR__ . '/translations.php';
     <title>Bayani World - Play. Learn. Be a Hero.</title>
     <meta name="description" content="An educational quiz game about Philippine history, heroes, and culture.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/icons/icon_192x192.png">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0038A8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="/assets/icons/icon_192x192.png">
+
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
