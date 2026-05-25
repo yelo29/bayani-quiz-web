@@ -1,8 +1,11 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'includes/functions.php';
+require_once __DIR__ . '/includes/functions.php';
 
 // Check if quiz was completed
 if (!isset($_SESSION['quiz_started'])) {
@@ -77,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['player_name'])) {
     }
 }
 
-require_once 'includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <main class="min-h-screen bg-gray-50 py-8 px-4">
@@ -267,4 +270,4 @@ function shareOnFacebookBtn() {
 animateScore();
 </script>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
