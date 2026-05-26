@@ -72,6 +72,7 @@ function saveScoreWithUser(int $userId, string $username, int $categoryId, int $
     return $stmt->execute([$userId, $username, $categoryId, $score, $total, $timeTaken, $xpEarned, $createdAt]);
 }
 
+/** better leaderboard fetching for quiz and battle */
 function getLeaderboard(int $categoryId = null, int $limit = 10, int $offset = 0, string $sortBy = 'score'): array {
     $pdo = getDB();
  
