@@ -15,7 +15,9 @@ require_once 'includes/header.php';
             <!-- Quiz Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                    
+                    <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fa-solid fa-question text-blue-600 text-3xl"></i>
+                        </div>
                     <h2 class="text-3xl font-bold text-[#0038A8] mb-2"> <?php echo t('quiz_title'); ?></h2>
                     <p class="text-gray-600"><?php echo t('quiz_desc'); ?></p>
                 </div>
@@ -38,7 +40,9 @@ require_once 'includes/header.php';
             <!-- Battle Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                    
+                    <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fa-solid fa-person-military-rifle text-red-600 text-3xl"></i>
+                        </div>
                     <h2 class="text-3xl font-bold text-[#CE1126] mb-2"> <?php echo t('battle_title'); ?></h2>
                     <p class="text-gray-600"><?php echo t('battle_desc'); ?></p>
                 </div>
@@ -62,7 +66,9 @@ require_once 'includes/header.php';
             <!-- Kwento Card -->
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
-                  
+                  <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fa-solid fa-boo   k text-purple-600 text-3xl"></i>
+                        </div>
                     <h2 class="text-3xl font-bold text-purple-600 mb-2"> Kwento Mode</h2>
                     <p class="text-gray-600">2D Story RPG - Travel through Philippine history</p>
                 </div>
@@ -79,6 +85,105 @@ require_once 'includes/header.php';
                 <a href="kwento/index.php" class="block w-full bg-purple-600 text-white text-center py-4 rounded-xl font-bold text-lg hover:bg-purple-700 transition">
                     <i class="fas fa-play mr-2"></i> Magsimula
                 </a>
+            </div>
+        </div>
+
+        <!-- Educational Games Section -->
+        <div class="mt-16">
+         
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Handa Ka Na Card -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-calculator text-green-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-green-600 mb-2">Handa Ka Na?</h3>
+                        <p class="text-gray-600 text-sm">Math - Grades 3-6</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Money Math</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Fractions</span>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">Math Racing</span>
+                        </div>
+                    </div>
+
+                    <a href="games/handa/index.php" class="block w-full bg-green-600 text-white text-center py-3 rounded-xl font-bold hover:bg-green-700 transition">
+                        <i class="fas fa-play mr-2"></i> Maglaro
+                    </a>
+                </div>
+
+                <!-- Wikain Card -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-language text-blue-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-blue-600 mb-2">Wikain</h3>
+                        <p class="text-gray-600 text-sm">Filipino - Grades 1-8</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Word Builder</span>
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">Sentence Builder</span>
+                            <span class="px-2 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs">Grammar</span>
+                        </div>
+                    </div>
+
+                    <a href="games/wikain/index.php" class="block w-full bg-blue-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-700 transition">
+                        <i class="fas fa-play mr-2"></i> Maglaro
+                    </a>
+                </div>
+
+                <!-- Buhay Pilipinas Card -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-red-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-map-marked-alt text-red-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-red-600 mb-2">Buhay Pilipinas</h3>
+                        <p class="text-gray-600 text-sm">Araling Panlipunan - Grades 4-10</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Map Puzzle</span>
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">History</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Animals</span>
+                        </div>
+                    </div>
+
+                    <a href="games/buhay/index.php" class="block w-full bg-red-600 text-white text-center py-3 rounded-xl font-bold hover:bg-red-700 transition">
+                        <i class="fas fa-play mr-2"></i> Maglaro
+                    </a>
+                </div>
+
+                <!-- Agham Card -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <i class="fas fa-flask text-purple-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-purple-600 mb-2">Agham</h3>
+                        <p class="text-gray-600 text-sm">Science - Grades 7-10</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Biology</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Chemistry</span>
+                            <span class="px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs">Ecosystem</span>
+                        </div>
+                    </div>
+
+                    <a href="games/agham/index.php" class="block w-full bg-purple-600 text-white text-center py-3 rounded-xl font-bold hover:bg-purple-700 transition">
+                        <i class="fas fa-play mr-2"></i> Maglaro
+                    </a>
+                </div>
             </div>
         </div>
     </div>

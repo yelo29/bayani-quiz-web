@@ -1,0 +1,665 @@
+<?php
+error_reporting(0);
+ini_set('display_errors', 0);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../../includes/header.php';
+
+// Load data files
+$animals = json_decode(file_get_contents(__DIR__ . '/data/animals.json'), true);
+$events = json_decode(file_get_contents(__DIR__ . '/data/events.json'), true);
+$provinces = json_decode(file_get_contents(__DIR__ . '/data/provinces.json'), true);
+
+// Get current mode from URL
+$mode = $_GET['mode'] ?? 'menu';
+?>
+
+<main class="min-h-screen bg-gradient-to-br from-red-600 via-red-700 to-red-800 py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Mode Selection Menu -->
+        <?php if ($mode === 'menu'): ?>
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold font-serif text-white mb-4">Buhay Pilipinas</h1>
+            <p class="text-xl text-white/80 mb-2">Araling Panlipunan - Grades 4-10</p>
+            <p class="text-white/60">Pumili ng mode upang maglaro</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Mode 1: Mapa -->
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=mapa'">
+                <div class="text-center mb-4">
+                    <div class="w-20 h-20 bg-red-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-map-marked-alt text-red-600 text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-red-600 mb-2">Mapa</h2>
+                    <p class="text-gray-600 text-sm">Map Puzzle</p>
+                </div>
+                <div class="mb-4">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">17 Regions</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Drag & Drop</span>
+                    </div>
+                </div>
+                <button class="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition">
+                    <i class="fas fa-play mr-2"></i> Maglaro
+                </button>
+            </div>
+
+            <!-- Mode 2: Kasaysayan -->
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=kasaysayan'">
+                <div class="text-center mb-4">
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-history text-yellow-600 text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-yellow-600 mb-2">Kasaysayan</h2>
+                    <p class="text-gray-600 text-sm">History Timeline</p>
+                </div>
+                <div class="mb-4">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">10 Events</span>
+                        <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs">Chronological</span>
+                    </div>
+                </div>
+                <button class="w-full bg-yellow-600 text-white py-3 rounded-xl font-bold hover:bg-yellow-700 transition">
+                    <i class="fas fa-play mr-2"></i> Maglaro
+                </button>
+            </div>
+
+            <!-- Mode 3: Hayop -->
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=hayop'">
+                <div class="text-center mb-4">
+                    <div class="w-20 h-20 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-paw text-green-600 text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-green-600 mb-2">Hayop</h2>
+                    <p class="text-gray-600 text-sm">Animal Match</p>
+                </div>
+                <div class="mb-4">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">12 Animals</span>
+                        <span class="px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs">Endemic Species</span>
+                    </div>
+                </div>
+                <button class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition">
+                    <i class="fas fa-play mr-2"></i> Maglaro
+                </button>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-8 text-center">
+            <a href="../../maglaro.php" class="inline-block bg-white/20 text-white px-8 py-3 rounded-xl font-bold hover:bg-white/30 transition">
+                <i class="fas fa-arrow-left mr-2"></i> Bumalik
+            </a>
+        </div>
+
+        <?php elseif ($mode === 'mapa'): ?>
+        <!-- Mode 1: Map Puzzle -->
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-6 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-red-600">Mapa - Philippine Regions</h2>
+                <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-3 mb-4 rounded">
+                <p class="text-sm text-blue-800"><i class="fas fa-info-circle mr-2"></i><strong>Panuto:</strong> I-drag ang pangalan ng rehiyon sa tamang lokasyon sa mapa. Pwede mong ilagay kahit saang lugar para matuto, pero tamang lokasyon lang ang may puntos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- Map Area with Drop Zones -->
+                <div class="space-y-4">
+                    <div class="text-center text-gray-500 text-sm md:text-base">I-drag ang region sa tamang lokasyon</div>
+
+                    <!-- Luzon Drop Zone -->
+                    <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Luzon">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <img src="https://via.placeholder.com/300x150/3B82F6/FFFFFF?text=LUZON+MAP" alt="Luzon Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                        </div>
+                        <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="luzonDropZone">
+                            <span class="text-gray-400 text-sm">I-drop ang Luzon regions dito</span>
+                        </div>
+                    </div>
+
+                    <!-- Visayas Drop Zone -->
+                    <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Visayas">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <img src="https://via.placeholder.com/300x150/EAB308/FFFFFF?text=VISAYAS+MAP" alt="Visayas Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                        </div>
+                        <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="visayasDropZone">
+                            <span class="text-gray-400 text-sm">I-drop ang Visayas regions dito</span>
+                        </div>
+                    </div>
+
+                    <!-- Mindanao Drop Zone -->
+                    <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Mindanao">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <img src="https://via.placeholder.com/300x150/22C55E/FFFFFF?text=MINDANAO+MAP" alt="Mindanao Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                        </div>
+                        <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="mindanaoDropZone">
+                            <span class="text-gray-400 text-sm">I-drop ang Mindanao regions dito</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Region Labels -->
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-4">Mga Rehiyon:</h3>
+                    <div class="grid grid-cols-2 gap-2" id="regionLabels">
+                        <?php foreach ($provinces as $province): ?>
+                        <div class="bg-white p-2 md:p-3 rounded-lg shadow cursor-grab active:cursor-grabbing border-2 border-gray-200 hover:border-red-400 transition text-xs md:text-sm" draggable="true" data-region-id="<?php echo $province['id']; ?>" data-name="<?php echo $province['name']; ?>" data-island="<?php echo $province['island_group']; ?>">
+                            <span class="font-medium text-gray-800"><?php echo $province['name']; ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 md:mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-gray-600 text-sm md:text-base">
+                    Score: <span id="score" class="font-bold text-red-600">0</span> / <?php echo count($provinces); ?>
+                </div>
+                <button onclick="submitMapScore()" class="w-full md:w-auto bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 transition">
+                    <i class="fas fa-check mr-2"></i> I-submit
+                </button>
+            </div>
+        </div>
+
+        <?php elseif ($mode === 'kasaysayan'): ?>
+        <!-- Mode 2: History Timeline -->
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-6 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-yellow-600">Kasaysayan - History Timeline</h2>
+                <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3 mb-4 rounded">
+                <p class="text-sm text-yellow-800"><i class="fas fa-info-circle mr-2"></i><strong>Panuto:</strong> I-drag ang mga kaganapan sa tamang order sa timeline. Mula sa pinakauna hanggang sa pinakabago.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 md:p-6 mb-4 md:mb-6 border-2 border-gray-200">
+                <h3 class="font-bold text-gray-800 mb-4">Timeline (1521 - 1986):</h3>
+                <div class="flex flex-wrap gap-3" id="timelineSlots">
+                    <?php for ($i = 0; $i < count($events); $i++): ?>
+                    <div class="timeline-slot bg-gray-50 border-2 border-dashed border-yellow-300 rounded-xl p-3 min-w-[100px] md:min-w-[140px] h-20 md:h-24 flex flex-col items-center justify-center text-xs text-gray-500 hover:border-yellow-400 transition" data-slot="<?php echo $i; ?>">
+                        <div class="text-xs text-gray-400 font-bold mb-1"><?php echo $i + 1; ?></div>
+                        <div class="text-xs text-gray-400">Drop event</div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-4 mb-4 md:mb-6">
+                <h3 class="font-bold text-gray-800 mb-4">Mga Kaganapan:</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3" id="eventCards">
+                    <?php foreach ($events as $index => $event): ?>
+                    <div class="bg-white p-2 md:p-3 rounded-lg shadow cursor-grab active:cursor-grabbing border-2 border-gray-200 hover:border-yellow-400 transition text-xs md:text-sm" draggable="true" data-year="<?php echo $event['year']; ?>" data-event="<?php echo $event['event']; ?>" data-index="<?php echo $index; ?>">
+                        <div class="text-xs text-gray-500 mb-1 font-bold"><?php echo $event['year']; ?></div>
+                        <div class="text-xs md:text-sm font-medium text-gray-800"><?php echo $event['event']; ?></div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-gray-600 text-sm md:text-base">
+                    Score: <span id="score" class="font-bold text-yellow-600">0</span> / <?php echo count($events); ?>
+                </div>
+                <button onclick="submitHistoryScore()" class="w-full md:w-auto bg-yellow-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-yellow-700 transition">
+                    <i class="fas fa-check mr-2"></i> I-submit
+                </button>
+            </div>
+        </div>
+
+        <?php elseif ($mode === 'hayop'): ?>
+        <!-- Mode 3: Animal Match -->
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-6 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-green-600">Hayop - Philippine Animals</h2>
+                <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="bg-green-50 border-l-4 border-green-500 p-3 mb-4 rounded">
+                <p class="text-sm text-green-800"><i class="fas fa-info-circle mr-2"></i><strong>Panuto:</strong> I-drag ang hayop sa tamang rehiyon kung saan ito matatagpuan. Pwede mong ilagay kahit saang rehiyon para matuto, pero tamang rehiyon lang ang may puntos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- Animals -->
+                <div class="bg-gray-50 rounded-2xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-4">Mga Hayop:</h3>
+                    <div class="grid grid-cols-2 gap-2 md:gap-3" id="animalCards">
+                        <?php foreach ($animals as $index => $animal): ?>
+                        <div class="bg-white p-3 md:p-4 rounded-lg shadow cursor-grab active:cursor-grabbing border-2 border-gray-200 hover:border-green-400 transition text-center" draggable="true" data-animal="<?php echo $animal['name']; ?>" data-region="<?php echo $animal['region']; ?>" data-index="<?php echo $index; ?>">
+                            <div class="text-3xl md:text-4xl mb-1 md:mb-2"><?php echo $animal['emoji']; ?></div>
+                            <div class="text-xs md:text-sm font-medium text-gray-800"><?php echo $animal['name']; ?></div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Map Regions -->
+                <div class="bg-gray-100 rounded-2xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-4">I-drag sa tamang rehiyon:</h3>
+                    <div class="space-y-2 md:space-y-3" id="regionDropZones">
+                        <div class="bg-blue-200 p-3 md:p-4 rounded-lg border-2 border-blue-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Luzon">
+                            <span class="font-bold text-blue-800 text-sm md:text-base">Luzon</span>
+                        </div>
+                        <div class="bg-yellow-200 p-3 md:p-4 rounded-lg border-2 border-yellow-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Visayas">
+                            <span class="font-bold text-yellow-800 text-sm md:text-base">Visayas</span>
+                        </div>
+                        <div class="bg-green-200 p-3 md:p-4 rounded-lg border-2 border-green-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Mindanao">
+                            <span class="font-bold text-green-800 text-sm md:text-base">Mindanao</span>
+                        </div>
+                        <div class="bg-purple-200 p-3 md:p-4 rounded-lg border-2 border-purple-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Bohol">
+                            <span class="font-bold text-purple-800 text-sm md:text-base">Bohol</span>
+                        </div>
+                        <div class="bg-orange-200 p-3 md:p-4 rounded-lg border-2 border-orange-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Mindoro">
+                            <span class="font-bold text-orange-800 text-sm md:text-base">Mindoro</span>
+                        </div>
+                        <div class="bg-teal-200 p-3 md:p-4 rounded-lg border-2 border-teal-400 min-h-[70px] md:min-h-[80px] flex items-center justify-center" data-region="Palawan">
+                            <span class="font-bold text-teal-800 text-sm md:text-base">Palawan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 md:mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-gray-600 text-sm md:text-base">
+                    Score: <span id="score" class="font-bold text-green-600">0</span> / <?php echo count($animals); ?>
+                </div>
+                <button onclick="submitAnimalScore()" class="w-full md:w-auto bg-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-700 transition">
+                    <i class="fas fa-check mr-2"></i> I-submit
+                </button>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+</main>
+
+<script>
+// Drag and Drop functionality
+let score = 0;
+let totalItems = 0;
+let droppedItems = new Set();
+let placedItems = new Map(); // Track which items are placed where
+let zoneContents = new Map(); // Track contents of each zone for piling
+let isSubmitting = false; // Prevent multiple submissions
+
+// Update submit button state
+function updateSubmitButton() {
+    const submitBtn = document.querySelector('button[onclick^="submit"]');
+    if (submitBtn) {
+        // Enable submit button only if ALL items have been placed
+        if (droppedItems.size === totalItems) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+}
+
+// Initialize submit button state
+document.addEventListener('DOMContentLoaded', updateSubmitButton);
+
+<?php if ($mode === 'mapa'): ?>
+totalItems = <?php echo count($provinces); ?>;
+
+// Map drag and drop
+const regionLabels = document.querySelectorAll('#regionLabels > div');
+const mapDropZones = document.querySelectorAll('.drop-zone-container');
+
+regionLabels.forEach(label => {
+    label.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            id: label.dataset.regionId,
+            name: label.dataset.name,
+            island: label.dataset.island
+        }));
+        label.style.opacity = '0.5';
+    });
+
+    label.addEventListener('dragend', (e) => {
+        label.style.opacity = '1';
+    });
+});
+
+mapDropZones.forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '#10B981';
+        zone.style.borderWidth = '3px';
+    });
+
+    zone.addEventListener('dragleave', (e) => {
+        zone.style.borderColor = '';
+        zone.style.borderWidth = '';
+    });
+
+    zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '';
+        zone.style.borderWidth = '';
+
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const targetRegion = zone.dataset.region;
+
+        // Allow dropping even on wrong locations for learning
+        if (!droppedItems.has(data.id)) {
+            droppedItems.add(data.id);
+            placedItems.set(data.id, targetRegion);
+
+            // Disable the label
+            const label = document.querySelector(`[data-region-id="${data.id}"]`);
+            if (label) {
+                label.draggable = false;
+                label.classList.add('opacity-50', 'cursor-not-allowed');
+                label.classList.remove('cursor-grab', 'active:cursor-grabbing');
+            }
+
+            // Get the correct drop zone div
+            let dropZoneId = '';
+            if (targetRegion === 'Luzon') dropZoneId = 'luzonDropZone';
+            if (targetRegion === 'Visayas') dropZoneId = 'visayasDropZone';
+            if (targetRegion === 'Mindanao') dropZoneId = 'mindanaoDropZone';
+
+            const dropZone = document.getElementById(dropZoneId);
+            if (dropZone) {
+                // Remove placeholder text if it exists
+                const placeholder = dropZone.querySelector('span.text-gray-400');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+
+                if (data.island === targetRegion) {
+                    // Correct match - give points
+                    score++;
+                    document.getElementById('score').textContent = score;
+                    zone.style.backgroundColor = '#D1FAE5';
+                    zone.style.borderColor = '#10B981';
+                } else {
+                    // Wrong match - no points, but still place item for learning
+                    zone.style.backgroundColor = '#FEE2E2';
+                    zone.style.borderColor = '#EF4444';
+                }
+
+                // Add to zone contents for piling
+                if (!zoneContents.has(targetRegion)) {
+                    zoneContents.set(targetRegion, []);
+                }
+                zoneContents.get(targetRegion).push(data.name);
+
+                // Create region badge
+                const badge = document.createElement('div');
+                badge.className = 'px-2 py-1 rounded text-xs font-medium ' +
+                    (data.island === targetRegion ? 'bg-green-500 text-white' : 'bg-red-500 text-white opacity-70');
+                badge.textContent = (data.island === targetRegion ? '✓ ' : '✗ ') + data.name.substring(0, 12);
+                dropZone.appendChild(badge);
+
+                // Update submit button state
+                updateSubmitButton();
+            }
+        }
+    });
+});
+
+function submitMapScore() {
+    if (score > totalItems) score = totalItems;
+    saveScore('buhay-mapa', score, totalItems);
+}
+
+<?php elseif ($mode === 'kasaysayan'): ?>
+totalItems = <?php echo count($events); ?>;
+
+// History timeline drag and drop
+const eventCards = document.querySelectorAll('#eventCards > div');
+const timelineSlots = document.querySelectorAll('.timeline-slot');
+const eventsData = <?php echo json_encode($events); ?>;
+
+eventCards.forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            index: card.dataset.index,
+            year: card.dataset.year,
+            event: card.dataset.event
+        }));
+        card.style.opacity = '0.5';
+    });
+
+    card.addEventListener('dragend', (e) => {
+        card.style.opacity = '1';
+    });
+});
+
+timelineSlots.forEach(slot => {
+    slot.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        // Only highlight if slot is empty
+        if (!slot.querySelector('.text-center')) {
+            slot.style.borderColor = '#10B981';
+            slot.style.backgroundColor = '#D1FAE5';
+        }
+    });
+
+    slot.addEventListener('dragleave', (e) => {
+        // Only clear styles if slot is empty
+        if (!slot.querySelector('.text-center')) {
+            slot.style.borderColor = '';
+            slot.style.backgroundColor = '';
+        }
+    });
+
+    slot.addEventListener('drop', (e) => {
+        e.preventDefault();
+        // Don't clear styles on drop - let the result set them
+
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const slotIndex = parseInt(slot.dataset.slot);
+
+        if (!droppedItems.has(data.index)) {
+            droppedItems.add(data.index);
+            placedItems.set(data.index, slotIndex);
+
+            // Disable the card
+            const card = document.querySelector(`[data-index="${data.index}"]`);
+            if (card) {
+                card.draggable = false;
+                card.classList.add('opacity-50', 'cursor-not-allowed');
+                card.classList.remove('cursor-grab', 'active:cursor-grabbing');
+            }
+
+            // Show event in slot
+            slot.innerHTML = `
+                <div class="text-center">
+                    <div class="text-xs font-bold text-yellow-600">${data.year}</div>
+                    <div class="text-xs text-gray-800">${data.event.substring(0, 18)}...</div>
+                </div>
+            `;
+
+            // Check if correct order
+            const correctYear = eventsData[slotIndex].year;
+            if (parseInt(data.year) === correctYear) {
+                score++;
+                document.getElementById('score').textContent = score;
+                slot.style.backgroundColor = '#D1FAE5';
+                slot.style.borderColor = '#10B981';
+                slot.style.borderStyle = 'solid';
+            } else {
+                slot.style.backgroundColor = '#FEE2E2';
+                slot.style.borderColor = '#EF4444';
+                slot.style.borderStyle = 'solid';
+            }
+
+            // Update submit button state
+            updateSubmitButton();
+        }
+    });
+});
+
+function submitHistoryScore() {
+    if (score > totalItems) score = totalItems;
+    saveScore('buhay-kasaysayan', score, totalItems);
+}
+
+<?php elseif ($mode === 'hayop'): ?>
+totalItems = <?php echo count($animals); ?>;
+
+// Animal drag and drop
+const animalCards = document.querySelectorAll('#animalCards > div');
+const animalDropZones = document.querySelectorAll('#regionDropZones > div');
+
+animalCards.forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            index: card.dataset.index,
+            animal: card.dataset.animal,
+            region: card.dataset.region,
+            emoji: card.querySelector('.text-3xl, .text-4xl').textContent
+        }));
+        card.style.opacity = '0.5';
+    });
+
+    card.addEventListener('dragend', (e) => {
+        card.style.opacity = '1';
+    });
+});
+
+animalDropZones.forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '#10B981';
+        zone.style.transform = 'scale(1.02)';
+    });
+
+    zone.addEventListener('dragleave', (e) => {
+        zone.style.borderColor = '';
+        zone.style.transform = '';
+    });
+
+    zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.style.borderColor = '';
+        zone.style.transform = '';
+
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const targetRegion = zone.dataset.region;
+
+        // Allow dropping even on wrong locations for learning
+        if (!droppedItems.has(data.index)) {
+            droppedItems.add(data.index);
+            placedItems.set(data.index, targetRegion);
+
+            // Disable the card
+            const card = document.querySelector(`[data-index="${data.index}"]`);
+            if (card) {
+                card.draggable = false;
+                card.classList.add('opacity-50', 'cursor-not-allowed');
+                card.classList.remove('cursor-grab', 'active:cursor-grabbing');
+            }
+
+            if (data.region === targetRegion) {
+                // Correct match - give points
+                score++;
+                document.getElementById('score').textContent = score;
+                zone.style.backgroundColor = '#10B981';
+                zone.style.borderColor = '#065F46';
+            } else {
+                // Wrong match - no points, but still place item for learning
+                zone.style.backgroundColor = '#EF4444';
+                zone.style.borderColor = '#991B1B';
+                setTimeout(() => {
+                    zone.style.backgroundColor = '#FCA5A5';
+                    zone.style.borderColor = '#991B1B';
+                }, 500);
+            }
+
+            // Add to zone contents for piling
+            if (!zoneContents.has(targetRegion)) {
+                zoneContents.set(targetRegion, []);
+                // Initialize zone with container
+                zone.innerHTML = '<div class="flex flex-wrap gap-1 justify-center items-center animal-container"></div>';
+            }
+            zoneContents.get(targetRegion).push({ emoji: data.emoji, name: data.animal });
+
+            // Append new animal to container
+            const container = zone.querySelector('.animal-container');
+            if (container) {
+                const animalSpan = document.createElement('span');
+                animalSpan.className = 'text-lg';
+                animalSpan.textContent = data.emoji;
+                if (data.region !== targetRegion) {
+                    animalSpan.style.opacity = '0.5'; // Dim wrong matches
+                }
+                container.appendChild(animalSpan);
+            }
+
+            // Update submit button state
+            updateSubmitButton();
+        }
+    });
+});
+
+function submitAnimalScore() {
+    if (score > totalItems) score = totalItems;
+    saveScore('buhay-hayop', score, totalItems);
+}
+<?php endif; ?>
+
+function saveScore(gameType, score, total) {
+    if (isSubmitting) return; // Prevent multiple submissions
+    isSubmitting = true;
+
+    const xp = Math.floor((score / total) * 50);
+    const coins = Math.floor((score / total) * 30);
+
+    // Disable all submit buttons
+    const submitButtons = document.querySelectorAll('button[onclick^="submit"]');
+    submitButtons.forEach(btn => {
+        btn.disabled = true;
+        btn.textContent = 'Isinasasa...';
+    });
+
+    fetch('../../api/save_game_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game_type: gameType, score: score, total: total, xp: xp, coins: coins })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Score: ${score}/${total}\nXP: +${xp}\nCoins: +${coins}`);
+            // Reload current page instead of going to maglaro.php
+            location.reload();
+        } else {
+            alert('Error saving score: ' + (data.error || 'Unknown error'));
+            // Re-enable buttons on error
+            submitButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.textContent = 'Isumit';
+            });
+            isSubmitting = false;
+        }
+    })
+    .catch(err => {
+        alert('Error: ' + err.message);
+        // Re-enable buttons on error
+        submitButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = 'Isumit';
+        });
+        isSubmitting = false;
+    });
+}
+</script>
+
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
