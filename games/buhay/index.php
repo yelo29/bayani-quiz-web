@@ -26,6 +26,15 @@ $mode = $_GET['mode'] ?? 'menu';
             <h1 class="text-4xl md:text-5xl font-bold font-serif text-white mb-4">Buhay Pilipinas</h1>
             <p class="text-xl text-white/80 mb-2">Araling Panlipunan - Grades 4-10</p>
             <p class="text-white/60">Pumili ng mode upang maglaro</p>
+            <!-- Wiki/Aralin Button -->
+        <div class="mt-6 text-center">
+            <button onclick="location.href='?mode=wiki'" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-700 transition shadow-lg">
+                <i class="fas fa-book-open mr-2"></i> Aralin / Wiki
+            </button>
+            <br><br>
+            <p class="text-xs text-white/80">Basahin ang mga impormasyon dito upang</p>
+                <p class="text-xs text-white/80">matutunan mo ang mga sagot sa mga laro.</p>
+        </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -90,12 +99,7 @@ $mode = $_GET['mode'] ?? 'menu';
             </div>
         </div>
 
-        <!-- Wiki/Aralin Button -->
-        <div class="mt-6 text-center">
-            <button onclick="location.href='?mode=wiki'" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-700 transition shadow-lg">
-                <i class="fas fa-book-open mr-2"></i> Aralin / Wiki
-            </button>
-        </div>
+        
 
         <!-- Back Button -->
         <div class="mt-4 text-center">
