@@ -90,8 +90,15 @@ $mode = $_GET['mode'] ?? 'menu';
             </div>
         </div>
 
+        <!-- Wiki/Aralin Button -->
+        <div class="mt-6 text-center">
+            <button onclick="location.href='?mode=wiki'" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-700 transition shadow-lg">
+                <i class="fas fa-book-open mr-2"></i> Aralin / Wiki
+            </button>
+        </div>
+
         <!-- Back Button -->
-        <div class="mt-8 text-center">
+        <div class="mt-4 text-center">
             <a href="../../maglaro.php" class="inline-block bg-white/20 text-white px-8 py-3 rounded-xl font-bold hover:bg-white/30 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Bumalik
             </a>
@@ -281,11 +288,145 @@ $mode = $_GET['mode'] ?? 'menu';
                 </button>
             </div>
         </div>
+
+        <?php elseif ($mode === 'wiki'): ?>
+        <!-- Wiki/Aralin Mode -->
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-6 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-purple-600">Aralin / Wiki</h2>
+                <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="bg-purple-50 border-l-4 border-purple-500 p-3 mb-4 rounded">
+                <p class="text-sm text-purple-800"><i class="fas fa-info-circle mr-2"></i><strong>Panuto:</strong> Basahin ang mga impormasyon dito upang matutunan mo ang mga sagot sa mga laro.</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="showWikiTab('mapa')" id="tab-mapa" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-red-600 text-white">Mapa</button>
+                <button onclick="showWikiTab('kasaysayan')" id="tab-kasaysayan" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">Kasaysayan</button>
+                <button onclick="showWikiTab('hayop')" id="tab-hayop" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">Hayop</button>
+            </div>
+
+            <!-- Mapa Content -->
+            <div id="wiki-mapa" class="wiki-content">
+                <h3 class="font-bold text-gray-800 mb-4 text-lg">Mga Rehiyon ng Pilipinas</h3>
+                <div class="space-y-3">
+                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+                        <h4 class="font-bold text-blue-800 mb-2">Luzon (North)</h4>
+                        <p class="text-sm text-gray-700 mb-2">Ang pinakamalaking isla sa hilaga. Dito matatagpuan ang Metro Manila.</p>
+                        <div class="text-sm text-gray-600">
+                            <strong>Mga Rehiyon:</strong> Ilocos Region, Cagayan Valley, Central Luzon, CALABARZON, MIMAROPA, Bicol Region, Cordillera, National Capital Region
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-500">
+                        <h4 class="font-bold text-yellow-800 mb-2">Visayas (Central)</h4>
+                        <p class="text-sm text-gray-700 mb-2">Ang mga isla sa gitna. Kilala sa mga beach at festivals.</p>
+                        <div class="text-sm text-gray-600">
+                            <strong>Mga Rehiyon:</strong> Western Visayas, Central Visayas, Eastern Visayas
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <h4 class="font-bold text-green-800 mb-2">Mindanao (South)</h4>
+                        <p class="text-sm text-gray-700 mb-2">Ang pangalawang pinakamalaking isla sa timog. Mayaman sa kultura at自然资源.</p>
+                        <div class="text-sm text-gray-600">
+                            <strong>Mga Rehiyon:</strong> Zamboanga Peninsula, Northern Mindanao, Davao Region, SOCCSKSARGEN, Caraga, ARMM, BARMM
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="font-bold text-gray-800 mb-4 mt-6 text-lg">Listahan ng mga Rehiyon</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <?php
+                    $luzonRegions = ['Ilocos Region', 'Cagayan Valley', 'Central Luzon', 'CALABARZON', 'MIMAROPA', 'Bicol Region', 'Cordillera', 'NCR'];
+                    $visayasRegions = ['Western Visayas', 'Central Visayas', 'Eastern Visayas'];
+                    $mindanaoRegions = ['Zamboanga Peninsula', 'Northern Mindanao', 'Davao Region', 'SOCCSKSARGEN', 'Caraga', 'ARMM', 'BARMM'];
+
+                    foreach ($provinces as $province) {
+                        $island = $province['island_group'];
+                        $color = 'blue';
+                        if ($island === 'Visayas') $color = 'yellow';
+                        if ($island === 'Mindanao') $color = 'green';
+                    ?>
+                    <div class="bg-<?php echo $color; ?>-100 p-2 rounded text-sm">
+                        <span class="font-bold text-<?php echo $color; ?>-800"><?php echo $province['name']; ?></span>
+                        <span class="text-gray-600 text-xs ml-2">(<?php echo $island; ?>)</span>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <!-- Kasaysayan Content -->
+            <div id="wiki-kasaysayan" class="wiki-content hidden">
+                <h3 class="font-bold text-gray-800 mb-4 text-lg">Timeline ng Kasaysayan ng Pilipinas</h3>
+                <div class="space-y-3">
+                    <?php foreach ($events as $event): ?>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-500">
+                        <div class="font-bold text-yellow-800 mb-1"><?php echo $event['year']; ?> - <?php echo $event['event']; ?></div>
+                        <p class="text-sm text-gray-700"><?php echo $event['description']; ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Hayop Content -->
+            <div id="wiki-hayop" class="wiki-content hidden">
+                <h3 class="font-bold text-gray-800 mb-4 text-lg">Mga Endemic na Hayop ng Pilipinas</h3>
+                <p class="text-sm text-gray-600 mb-4">Ang mga hayop na ito ay matatagpuan lang sa Pilipinas at hindi sa ibang bansa.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <?php foreach ($animals as $animal): ?>
+                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-3xl"><?php echo $animal['emoji']; ?></span>
+                            <div>
+                                <div class="font-bold text-green-800"><?php echo $animal['name']; ?></div>
+                                <div class="text-xs text-gray-600"><?php echo $animal['region']; ?></div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-700 mb-2"><strong>Habitat:</strong> <?php echo $animal['habitat']; ?></p>
+                        <p class="text-xs text-gray-600 italic"><?php echo $animal['description']; ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
         <?php endif; ?>
     </div>
 </main>
 
 <script>
+// Wiki tab switching
+function showWikiTab(tabName) {
+    // Hide all content
+    document.querySelectorAll('.wiki-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+
+    // Reset all tabs
+    document.querySelectorAll('.wiki-tab').forEach(tab => {
+        tab.classList.remove('bg-red-600', 'bg-yellow-600', 'bg-green-600', 'text-white');
+        tab.classList.add('bg-gray-200', 'text-gray-700');
+    });
+
+    // Show selected content
+    document.getElementById('wiki-' + tabName).classList.remove('hidden');
+
+    // Highlight selected tab
+    const selectedTab = document.getElementById('tab-' + tabName);
+    selectedTab.classList.remove('bg-gray-200', 'text-gray-700');
+
+    if (tabName === 'mapa') {
+        selectedTab.classList.add('bg-red-600', 'text-white');
+    } else if (tabName === 'kasaysayan') {
+        selectedTab.classList.add('bg-yellow-600', 'text-white');
+    } else if (tabName === 'hayop') {
+        selectedTab.classList.add('bg-green-600', 'text-white');
+    }
+}
+
 // Drag and Drop functionality
 let score = 0;
 let totalItems = 0;
