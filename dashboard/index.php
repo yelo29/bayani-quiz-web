@@ -62,91 +62,95 @@ require_once __DIR__ . '/includes/header.php';
 
 <div class="space-y-6">
     <!-- Stat Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">Total Users</p>
-                    <p class="text-3xl font-bold text-white"><?php echo number_format($total_users); ?></p>
+                    <p class="text-gray-400 text-xs lg:text-sm">Total Users</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-white"><?php echo number_format($total_users); ?></p>
                 </div>
-                <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-users text-blue-500 text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-users text-blue-500 text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">Total Questions</p>
-                    <p class="text-3xl font-bold text-white"><?php echo number_format($total_questions); ?></p>
+                    <p class="text-gray-400 text-xs lg:text-sm">Total Questions</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-white"><?php echo number_format($total_questions); ?></p>
                 </div>
-                <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-question-circle text-green-500 text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-question-circle text-green-500 text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">Battles Today</p>
-                    <p class="text-3xl font-bold text-white"><?php echo number_format($battles_today); ?></p>
+                    <p class="text-gray-400 text-xs lg:text-sm">Battles Today</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-white"><?php echo number_format($battles_today); ?></p>
                 </div>
-                <div class="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-swords text-red-500 text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-swords text-red-500 text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">Quiz Games Today</p>
-                    <p class="text-3xl font-bold text-white"><?php echo number_format($quiz_today); ?></p>
+                    <p class="text-gray-400 text-xs lg:text-sm">Quiz Games Today</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-white"><?php echo number_format($quiz_today); ?></p>
                 </div>
-                <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-book-open text-purple-500 text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-book-open text-purple-500 text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">New Users (7 Days)</p>
-                    <p class="text-3xl font-bold text-white"><?php echo number_format($new_users_week); ?></p>
+                    <p class="text-gray-400 text-xs lg:text-sm">New Users (7 Days)</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-white"><?php echo number_format($new_users_week); ?></p>
                 </div>
-                <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-user-plus text-yellow-500 text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user-plus text-yellow-500 text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-400 text-sm">Popular Category</p>
-                    <p class="text-xl font-bold text-white"><?php echo htmlspecialchars($popular_category['name'] ?? 'N/A'); ?></p>
-                    <p class="text-sm text-gray-400"><?php echo number_format($popular_category['plays'] ?? 0); ?> plays</p>
+                    <p class="text-gray-400 text-xs lg:text-sm">Popular Category</p>
+                    <p class="text-lg lg:text-xl font-bold text-white"><?php echo htmlspecialchars($popular_category['name'] ?? 'N/A'); ?></p>
+                    <p class="text-xs lg:text-sm text-gray-400"><?php echo number_format($popular_category['plays'] ?? 0); ?> plays</p>
                 </div>
-                <div class="w-12 h-12 bg-[#0038A8]/20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-star text-[#FFD700] text-xl"></i>
+                <div class="w-10 h-10 lg:w-12 lg:h-12 bg-[#0038A8]/20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-star text-[#FFD700] text-lg lg:text-xl"></i>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <h3 class="text-lg font-bold text-white mb-4">7-Day User Registrations</h3>
-            <canvas id="registrationChart"></canvas>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
+            <h3 class="text-base lg:text-lg font-bold text-white mb-4">7-Day User Registrations</h3>
+            <div class="h-64 lg:h-80">
+                <canvas id="registrationChart"></canvas>
+            </div>
         </div>
 
-        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-            <h3 class="text-lg font-bold text-white mb-4">Category Distribution</h3>
-            <canvas id="categoryChart"></canvas>
+        <div class="bg-gray-800 rounded-xl p-4 lg:p-6 border border-gray-700">
+            <h3 class="text-base lg:text-lg font-bold text-white mb-4">Category Distribution</h3>
+            <div class="h-64 lg:h-80">
+                <canvas id="categoryChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -169,15 +173,25 @@ new Chart(registrationCtx, {
     },
     options: {
         responsive: true,
-        plugins: { legend: { display: false } },
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
         scales: {
             y: {
                 beginAtZero: true,
-                ticks: { stepSize: 1, color: '#9ca3af' },
+                ticks: {
+                    stepSize: 1,
+                    color: '#9ca3af',
+                    font: { size: window.innerWidth < 640 ? 10 : 12 }
+                },
                 grid: { color: 'rgba(255,255,255,0.05)' }
             },
             x: {
-                ticks: { color: '#9ca3af' },
+                ticks: {
+                    color: '#9ca3af',
+                    font: { size: window.innerWidth < 640 ? 10 : 12 }
+                },
                 grid: { color: 'rgba(255,255,255,0.05)' }
             }
         }
@@ -197,10 +211,15 @@ new Chart(categoryCtx, {
     },
     options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',
-                labels: { color: '#9ca3af' }
+                labels: {
+                    color: '#9ca3af',
+                    font: { size: window.innerWidth < 640 ? 10 : 12 },
+                    padding: window.innerWidth < 640 ? 8 : 12
+                }
             }
         }
     }
