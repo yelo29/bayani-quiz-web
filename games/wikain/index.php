@@ -20,6 +20,10 @@ $regularSentences = array_filter($sentences, function($s) {
 
 // Re-index array
 $regularSentences = array_values($regularSentences);
+
+// Get current mode from URL
+$mode = $_GET['mode'] ?? 'menu';
+$quizType = $_GET['quiz'] ?? '';
 ?>
 
 <main class="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-8 px-4">
@@ -31,10 +35,21 @@ $regularSentences = array_values($regularSentences);
             <p class="text-white/60">Pumili ng mode upang maglaro</p>
         </div>
 
+        <?php if ($mode === 'menu'): ?>
+        <!-- Wiki/Aralin Button -->
+        <div class="text-center mb-6">
+            <button onclick="location.href='?mode=wiki'" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-purple-700 transition shadow-lg">
+                <i class="fas fa-book-open mr-2"></i> Aralin / Wiki
+            </button>
+            <br><br>
+            <p class="text-xs text-white/80">Basahin ang mga impormasyon dito upang</p>
+            <p class="text-xs text-white/80">matutunan mo ang mga sagot sa mga laro.</p>
+        </div>
+
         <!-- Mode Selection -->
-        <div id="mode-selection" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-3xl mx-auto">
+        <div id="mode-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
             <!-- Word Quiz -->
-            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="setMode('word')">
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=quiz&quiz=word'">
                 <div class="text-center mb-4">
                     <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                         <i class="fas fa-font text-blue-600 text-4xl"></i>
@@ -45,7 +60,7 @@ $regularSentences = array_values($regularSentences);
                 <div class="mb-4">
                     <div class="flex flex-wrap gap-2 justify-center">
                         <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">English Translation</span>
-                        <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">Multiple Choice</span>
+                        <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">10 Items</span>
                     </div>
                 </div>
                 <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">
@@ -54,7 +69,7 @@ $regularSentences = array_values($regularSentences);
             </div>
 
             <!-- Sentence Quiz -->
-            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="setMode('sentence')">
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=quiz&quiz=sentence'">
                 <div class="text-center mb-4">
                     <div class="w-20 h-20 bg-purple-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                         <i class="fas fa-align-left text-purple-600 text-4xl"></i>
@@ -65,11 +80,31 @@ $regularSentences = array_values($regularSentences);
                 <div class="mb-4">
                     <div class="flex flex-wrap gap-2 justify-center">
                         <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">English Translation</span>
-                        <span class="px-2 py-1 bg-pink-100 text-pink-800 rounded-full text-xs">Multiple Choice</span>
+                        <span class="px-2 py-1 bg-pink-100 text-pink-800 rounded-full text-xs">10 Items</span>
                     </div>
                 </div>
                 <button class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 transition">
                     <i class="fas fa-play mr-2"></i> Maglaro
+                </button>
+            </div>
+
+            <!-- Finals Quiz -->
+            <div class="bg-white rounded-3xl shadow-2xl p-6 transform hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="location.href='?mode=wiki'">
+                <div class="text-center mb-4">
+                    <div class="w-20 h-20 bg-orange-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+                        <i class="fas fa-trophy text-orange-600 text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-orange-600 mb-2">Finals</h2>
+                    <p class="text-gray-600 text-sm">Comprehensive Quiz</p>
+                </div>
+                <div class="mb-4">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs">20 Items</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Review Required</span>
+                    </div>
+                </div>
+                <button class="w-full bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-orange-700 transition">
+                    <i class="fas fa-book mr-2"></i> Mag-aral Muna
                 </button>
             </div>
         </div>
@@ -81,15 +116,65 @@ $regularSentences = array_values($regularSentences);
             </a>
         </div>
 
-        <!-- Quiz Area (Hidden by default) -->
-        <div id="quiz-area" class="hidden">
+        <?php elseif ($mode === 'wiki'): ?>
+        <!-- Wiki/Aralin Mode -->
+        <div class="bg-white rounded-3xl shadow-2xl p-4 md:p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 md:mb-6 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-purple-600">Aralin / Wiki</h2>
+                <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </a>
+            </div>
+
+            <div class="bg-purple-50 border-l-4 border-purple-500 p-3 mb-4 rounded">
+                <p class="text-sm text-purple-800"><i class="fas fa-info-circle mr-2"></i><strong>Panuto:</strong> Basahin ang mga impormasyon dito upang matutunan mo ang mga sagot sa mga laro.</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="showWikiTab('salita')" id="tab-salita" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-blue-600 text-white">Salita</button>
+                <button onclick="showWikiTab('pangungusap')" id="tab-pangungusap" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-700 hover:bg-gray-300">Pangungusap</button>
+                <button onclick="startFinals()" id="tab-finals" class="wiki-tab px-4 py-2 rounded-lg font-bold bg-orange-200 text-orange-700 hover:bg-orange-300">Kumuha ng Finals</button>
+            </div>
+
+            <!-- Salita Content -->
+            <div id="wiki-salita" class="wiki-content">
+                <h3 class="font-bold text-gray-800 mb-4 text-lg">Mga Salita at Kanilang Kahulugan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <?php foreach ($words as $word): ?>
+                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+                        <div class="font-bold text-blue-800 mb-1"><?php echo $word['word']; ?></div>
+                        <p class="text-sm text-gray-700 mb-2"><strong>English:</strong> <?php echo $word['english']; ?></p>
+                        <p class="text-xs text-gray-600"><strong>Pantig:</strong> <?php echo implode(', ', $word['syllables']); ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Pangungusap Content -->
+            <div id="wiki-pangungusap" class="wiki-content hidden">
+                <h3 class="font-bold text-gray-800 mb-4 text-lg">Mga Pangungusap at Kanilang Kahulugan</h3>
+                <div class="space-y-3">
+                    <?php foreach ($regularSentences as $sentence): ?>
+                    <div class="bg-purple-50 p-3 rounded-lg border-l-4 border-purple-500">
+                        <div class="font-bold text-purple-800 mb-1"><?php echo $sentence['sentence']; ?></div>
+                        <p class="text-sm text-gray-700"><strong>English:</strong> <?php echo $sentence['english']; ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+        <?php else: ?>
+        <!-- Quiz Area -->
+        <div id="quiz-area">
             <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8">
                 <!-- Quiz Header -->
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h2 id="quiz-title" class="text-xl md:text-2xl font-bold text-blue-600">Quiz</h2>
-                    <button onclick="backToMenu()" class="text-gray-600 hover:text-gray-800">
+                    <a href="?mode=menu" class="text-gray-600 hover:text-gray-800">
                         <i class="fas fa-times text-2xl"></i>
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Progress Bar -->
@@ -117,6 +202,7 @@ $regularSentences = array_values($regularSentences);
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 </main>
 
@@ -132,6 +218,41 @@ let currentQuestionIndex = 0;
 let score = 0;
 let totalQuestions = 10;
 let isAnswering = false;
+
+// Wiki tab switching
+function showWikiTab(tabName) {
+    // Hide all content
+    document.querySelectorAll('.wiki-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+
+    // Reset all tabs
+    document.querySelectorAll('.wiki-tab').forEach(tab => {
+        tab.classList.remove('bg-blue-600', 'bg-purple-600', 'bg-orange-600', 'text-white');
+        tab.classList.add('bg-gray-200', 'text-gray-700');
+    });
+
+    // Show selected content
+    document.getElementById('wiki-' + tabName).classList.remove('hidden');
+
+    // Highlight selected tab
+    const selectedTab = document.getElementById('tab-' + tabName);
+    selectedTab.classList.remove('bg-gray-200', 'text-gray-700');
+
+    if (tabName === 'salita') {
+        selectedTab.classList.add('bg-blue-600', 'text-white');
+    } else if (tabName === 'pangungusap') {
+        selectedTab.classList.add('bg-purple-600', 'text-white');
+    } else if (tabName === 'finals') {
+        selectedTab.classList.add('bg-orange-600', 'text-white');
+    }
+}
+
+// Start finals quiz
+function startFinals() {
+    // Navigate to quiz with finals parameter
+    location.href = '?mode=quiz&quiz=finals';
+}
 
 // Set mode and start quiz
 function setMode(mode) {
@@ -152,20 +273,37 @@ function setMode(mode) {
             options: generateOptions(s.english, sentencesData.map(s => s.english))
         })));
         document.getElementById('quiz-title').textContent = 'Pangungusap Quiz';
+    } else if (mode === 'finals') {
+        // Combine all questions
+        const wordQuestions = wordsData.map(w => ({
+            question: w.word,
+            correct: w.english,
+            options: generateOptions(w.english, wordsData.map(w => w.english))
+        }));
+
+        const sentenceQuestions = sentencesData.map(s => ({
+            question: s.sentence,
+            correct: s.english,
+            options: generateOptions(s.english, sentencesData.map(s => s.english))
+        }));
+
+        // Combine and shuffle
+        questions = shuffleArray([...wordQuestions, ...sentenceQuestions]);
+        document.getElementById('quiz-title').textContent = 'Finals Quiz';
     }
 
-    // Limit to 10 questions
-    questions = questions.slice(0, 10);
+    // Limit questions based on mode
+    if (mode === 'finals') {
+        questions = questions.slice(0, 20);
+    } else {
+        questions = questions.slice(0, 10);
+    }
     totalQuestions = questions.length;
 
     // Reset game state
     currentQuestionIndex = 0;
     score = 0;
     isAnswering = false;
-
-    // Show quiz area
-    document.getElementById('mode-selection').classList.add('hidden');
-    document.getElementById('quiz-area').classList.remove('hidden');
 
     // Load first question
     loadQuestion();
@@ -297,7 +435,7 @@ function saveScoreToAPI(xp, coins) {
     .then(data => {
         if (data.success) {
             alert(`Score: ${score}/${totalQuestions}\nXP: +${xp}\nCoins: +${coins}`);
-            location.reload();
+            location.href = '?mode=menu';
         } else {
             alert('Error saving score: ' + (data.error || 'Unknown error'));
         }
@@ -305,12 +443,6 @@ function saveScoreToAPI(xp, coins) {
     .catch(err => {
         alert('Error: ' + err.message);
     });
-}
-
-// Back to menu
-function backToMenu() {
-    document.getElementById('mode-selection').classList.remove('hidden');
-    document.getElementById('quiz-area').classList.add('hidden');
 }
 
 // Shuffle array (Fisher-Yates)
@@ -322,6 +454,18 @@ function shuffleArray(array) {
     }
     return newArray;
 }
+
+// Initialize quiz if mode is quiz
+<?php if ($mode === 'quiz'): ?>
+document.addEventListener('DOMContentLoaded', () => {
+    const quizType = '<?php echo $quizType; ?>';
+    if (quizType === 'finals') {
+        setMode('finals');
+    } else if (quizType) {
+        setMode(quizType);
+    }
+});
+<?php endif; ?>
 </script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

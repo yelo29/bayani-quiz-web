@@ -67,7 +67,7 @@ require_once 'includes/header.php';
             <div class="bg-white rounded-3xl shadow-2xl p-8 transform hover:scale-105 transition-transform duration-300">
                 <div class="text-center mb-6">
                   <div class="w-16 h-16 bg-purple-100 rounded-full mx-auto mb-3 flex items-center justify-center">
-                            <i class="fa-solid fa-boo   k text-purple-600 text-3xl"></i>
+                            <i class="fa-solid fa-book text-purple-600 text-3xl"></i>
                         </div>
                     <h2 class="text-3xl font-bold text-purple-600 mb-2"> Kwento Mode</h2>
                     <p class="text-gray-600">2D Story RPG - Travel through Philippine history</p>
@@ -128,9 +128,9 @@ require_once 'includes/header.php';
 
                     <div class="mb-4">
                         <div class="flex flex-wrap gap-2 justify-center">
-                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Word Builder</span>
-                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">Sentence Builder</span>
-                            <span class="px-2 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs">Grammar</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Words</span>
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs">Sentences</span>
+                            <span class="px-2 py-1 bg-cyan-100 text-cyan-800 rounded-full text-xs">Finals</span>
                         </div>
                     </div>
 
