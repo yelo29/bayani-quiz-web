@@ -130,7 +130,7 @@ $mode = $_GET['mode'] ?? 'menu';
                     <!-- Luzon Drop Zone -->
                     <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Luzon">
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <img src="https://via.placeholder.com/300x150/3B82F6/FFFFFF?text=LUZON+MAP" alt="Luzon Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                            <img src="https://www.philatlas.com/images/island-groups/luzonRegions.png" alt="Luzon Map" class="w-full h-24 object-cover rounded-lg opacity-30">
                         </div>
                         <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="luzonDropZone">
                             <span class="text-gray-400 text-sm">I-drop ang Luzon regions dito</span>
@@ -140,7 +140,7 @@ $mode = $_GET['mode'] ?? 'menu';
                     <!-- Visayas Drop Zone -->
                     <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Visayas">
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <img src="https://via.placeholder.com/300x150/EAB308/FFFFFF?text=VISAYAS+MAP" alt="Visayas Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                            <img src="https://www.philatlas.com/images/island-groups/visayasRegions.png" alt="Visayas Map" class="w-full h-24 object-cover rounded-lg opacity-30">
                         </div>
                         <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="visayasDropZone">
                             <span class="text-gray-400 text-sm">I-drop ang Visayas regions dito</span>
@@ -150,7 +150,7 @@ $mode = $_GET['mode'] ?? 'menu';
                     <!-- Mindanao Drop Zone -->
                     <div class="bg-gray-100 rounded-2xl p-4 relative drop-zone-container" data-region="Mindanao">
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <img src="https://via.placeholder.com/300x150/22C55E/FFFFFF?text=MINDANAO+MAP" alt="Mindanao Map" class="w-full h-24 object-cover rounded-lg opacity-30">
+                            <img src="https://www.philatlas.com/images/island-groups/mindanaoRegions.png" alt="Mindanao Map" class="w-full h-24 object-cover rounded-lg opacity-30">
                         </div>
                         <div class="relative z-10 min-h-[100px] flex flex-wrap gap-2 items-center justify-center pt-2" id="mindanaoDropZone">
                             <span class="text-gray-400 text-sm">I-drop ang Mindanao regions dito</span>
