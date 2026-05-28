@@ -254,7 +254,9 @@ $battleLeaderboard = $stmt->fetchAll();
                                         <p class="text-sm text-gray-600">
                                             <?php
                                             try {
+                                                // Parse as UTC since database stores UTC
                                                 $date = new DateTime($score['created_at'], new DateTimeZone('UTC'));
+                                                // Convert to Philippines timezone
                                                 $date->setTimezone(new DateTimeZone('Asia/Manila'));
                                                 echo $date->format('M d, Y h:i A');
                                             } catch (Exception $e) {
@@ -525,14 +527,16 @@ $battleLeaderboard = $stmt->fetchAll();
                                         </td>
                                         <td class="px-6 py-4">
                                             <p class="text-2xl font-bold text-<?php echo $config['color']; ?>-600">
-                                                <?php echo $score['score']; ?>/<?php echo $score['total'] ?? '-'; ?>
+                                                <?php echo $score['score']; ?>/<?php echo $score['total_questions'] ?? '-'; ?>
                                             </p>
                                         </td>
                                         <td class="px-6 py-4">
                                             <p class="text-sm text-gray-600">
                                                 <?php
                                                 try {
+                                                    // Parse as UTC since database stores UTC
                                                     $date = new DateTime($score['created_at'], new DateTimeZone('UTC'));
+                                                    // Convert to Philippines timezone
                                                     $date->setTimezone(new DateTimeZone('Asia/Manila'));
                                                     echo $date->format('M d, Y h:i A');
                                                 } catch (Exception $e) {

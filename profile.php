@@ -152,7 +152,9 @@ $currentHero = $heroClasses[$userData['hero_class']] ?? null;
                     <?php endif; ?>
                     <p class="text-gray-500">Member since <?php
                     try {
+                        // Parse as UTC since database stores UTC
                         $date = new DateTime($userData['created_at'], new DateTimeZone('UTC'));
+                        // Convert to Philippines timezone
                         $date->setTimezone(new DateTimeZone('Asia/Manila'));
                         echo $date->format('F d, Y h:i A');
                     } catch (Exception $e) {
@@ -344,7 +346,9 @@ $currentHero = $heroClasses[$userData['hero_class']] ?? null;
                                     <p class="font-semibold text-gray-800"><?php echo htmlspecialchars($battle['enemy_name']); ?> (<?php echo htmlspecialchars($battle['era']); ?>)</p>
                                     <p class="text-sm text-gray-500"><?php
                                     try {
+                                        // Parse as UTC since database stores UTC
                                         $date = new DateTime($battle['created_at'], new DateTimeZone('UTC'));
+                                        // Convert to Philippines timezone
                                         $date->setTimezone(new DateTimeZone('Asia/Manila'));
                                         echo $date->format('F d, Y h:i A');
                                     } catch (Exception $e) {
@@ -402,7 +406,9 @@ $currentHero = $heroClasses[$userData['hero_class']] ?? null;
                                     <p class="text-sm text-gray-600"><?php echo htmlspecialchars($achievement['achievement_description']); ?></p>
                                     <p class="text-xs text-gray-500 mt-1"><?php
                                     try {
+                                        // Parse as UTC since database stores UTC
                                         $date = new DateTime($achievement['earned_at'], new DateTimeZone('UTC'));
+                                        // Convert to Philippines timezone
                                         $date->setTimezone(new DateTimeZone('Asia/Manila'));
                                         echo $date->format('F d, Y h:i A');
                                     } catch (Exception $e) {

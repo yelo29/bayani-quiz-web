@@ -37,18 +37,14 @@ try {
     if ($user_id) {
         // Logged in user
         $pdo = getDB();
-        
-        // Check if total column exists
-        $columnCheck = $pdo->query("SHOW COLUMNS FROM scores LIKE 'total'");
-        $hasTotalColumn = $columnCheck->rowCount() > 0;
-        
-        if ($hasTotalColumn) {
-            $stmt = $pdo->prepare("INSERT INTO scores (user_id, game_type, score, total) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$user_id, $game_type, $score, $total]);
-        } else {
-            $stmt = $pdo->prepare("INSERT INTO scores (user_id, game_type, score) VALUES (?, ?, ?)");
-            $stmt->execute([$user_id, $game_type, $score]);
-        }
+
+        // Get current time in UTC
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $createdAt = $now->format('Y-m-d H:i:s');
+
+        // Save using total_questions column (same as quiz)
+        $stmt = $pdo->prepare("INSERT INTO scores (user_id, game_type, score, total_questions, category_id, created_at) VALUES (?, ?, ?, ?, NULL, ?)");
+        $stmt->execute([$user_id, $game_type, $score, $total, $createdAt]);
 
         // Update XP
         updateUserXP($user_id, $xp);
