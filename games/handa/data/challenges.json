@@ -1,0 +1,50 @@
+[
+    {
+        "situation": "Malakas na lindol habang ikaw ay nasa loob ng paaralan.",
+        "correctAction": "Mabilis na mag-Duck, Cover, and Hold. Lumayo sa bintana at kumuha ng matibay na mesa.",
+        "explanation": "Ang 'Duck, Cover, and Hold' ay nagpoprotekta sa iyo mula sa mga bagay na maaaring mahulog. Huwag tumakbo palabas dahil baka matamaan ka ng mga bumagsak na bagay.",
+        "icon": "*"
+    },
+    {
+        "situation": "Nagbabadyang bagyo at inanunsyo na ang evacuation sa inyong lugar.",
+        "correctAction": "Makinig sa balita, maghanda ng emergency bag, at lumikas agad ayon sa utos ng barangay.",
+        "explanation": "Huwag hintayin na lumakas ang bagyo bago lumikas. Ang maagang paghahanda ay nakakapagligtas ng buhay. Dalhin ang mahahalagang dokumento at sapat na pagkain.",
+        "icon": "*"
+    },
+    {
+        "situation": "May nasunog na bahay sa inyong kapitbahayan at nagsisimula nang kumalat ang apoy.",
+        "correctAction": "Tumawag agad sa bumbero (160), lumabas ng bahay nang ligtas, huwag gumamit ng elevator, at pumunta sa itinakdang evacuation area.",
+        "explanation": "Huwag mag-aksaya ng oras sa pagsalba ng gamit. Unahin ang kaligtasan ng pamilya. Gumapang kung may usok para hindi malanghap ang mapanganib na hangin.",
+        "icon": "*"
+    },
+    {
+        "situation": "Ikaw ay nasa dalampasigan at biglang lumindol nang malakas (maaaring magdulot ng tsunami).",
+        "correctAction": "Agad na tumakbo paakyat sa mataas na lugar o lumayo sa dalampasigan. Hintayin ang opisyal na anunsyo bago bumalik.",
+        "explanation": "Pagkatapos ng malakas na lindol, posibleng sumunod ang tsunami sa loob ng ilang minuto. Ang pagtakbo sa mataas na lugar ang tanging kaligtasan.",
+        "icon": "*"
+    },
+    {
+        "situation": "Habang nasa biyahe, bumuhos ang malakas na ulan at bumaha sa kalsada.",
+        "correctAction": "Huwag tumawid sa baha; humanap ng ligtas na matataas na lugar o bumalik kung hindi gaano kalalim ang baha.",
+        "explanation": "Ang baha ay maaaring magtago ng malalalim na hukay o bukas na kanal. Maaari ka ring tangayin ng malakas na agos. Mas mainam na maghintay o lumihis ng ruta.",
+        "icon": "*"
+    },
+    {
+        "situation": "May nagbabanggit na may lindol habang ikaw ay nasa sinehan o mall.",
+        "correctAction": "Humanap ng matibay na bagay na masisilungan tulad ng ilalim ng upuan, protektahan ang ulo, at lumayo sa mga glass window at matataas na istante.",
+        "explanation": "Huwag makisalamuha sa nagpapanic na tao. Manatili sa pwesto hanggang tumigil ang lindol. Sundin ang mga emergency exit pagkatapos ng pagyanig.",
+        "icon": "*"
+    },
+    {
+        "situation": "Tagtuyot at limitado ang supply ng tubig sa inyong lugar.",
+        "correctAction": "Mag-ipon ng tubig sa malinis na lalagyan, iwasan ang pag-aaksaya, at gamitin ang tubig nang matipid. I-report ang sirang tubo.",
+        "explanation": "Ang bawat patak ay mahalaga. Maaari ring mangolekta ng tubig-ulan para sa hindi inuming gamit. Huwag inumin ang hindi ligtas na tubig.",
+        "icon": "*"
+    },
+    {
+        "situation": "May landslide warning sa inyong bundok na tinitirhan dahil sa tuloy-tuloy na ulan.",
+        "correctAction": "Lumikas agad sa ligtas na evacuation center. Huwag nang maghintay na gumuho ang lupa. Iwasan ang mga steep slopes at bangin.",
+        "explanation": "Ang landslide ay biglaang nangyayari. Pakinggan ang ingay ng gumuguhong bato o lupa. Kung hindi pa lumikas, tumakbo patagilid sa direksyong hindi papunta sa pagguho.",
+        "icon": "*"
+    }
+]

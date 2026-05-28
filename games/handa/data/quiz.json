@@ -1,0 +1,52 @@
+[
+    {
+        "statement": "Kapag may lindol, dapat tumakbo agad palabas ng gusali kahit na umaalog pa ang lupa.",
+        "isCorrect": false,
+        "explanation": "Mali ito. Sa panahon ng lindol, mas ligtas na mag-Duck, Cover, and Hold sa ilalim ng matibay na mesa hanggang tumigil ang pagyanig. Ang pagtakbo habang lumilindol ay delikado dahil maaaring mahulog sa iyo ang mga bagay."
+    },
+    {
+        "statement": "Kung ikaw ay nasa dalampasigan at nakaramdam ng malakas na lindol, dapat agad na pumunta sa mataas na lugar dahil baka may sumunod na tsunami.",
+        "isCorrect": true,
+        "explanation": "Tama. Ang malakas na lindol ay maaaring magdulot ng tsunami. Kailangan umakyat sa mataas na lugar o lumayo sa dalampasigan pagkatapos ng lindol."
+    },
+    {
+        "statement": "Habang may bagyo, mainam na lumabas ng bahay upang manood ng malalakas na alon sa dalampasigan.",
+        "isCorrect": false,
+        "explanation": "Mali. Delikadong lumabas sa panahon ng bagyo dahil sa malalakas na hangin, kidlat, at posibleng storm surge. Manatili sa loob ng matibay na gusali."
+    },
+    {
+        "statement": "Kung may sunog, dapat gumamit ng elevator upang mabilis na makalabas ng gusali.",
+        "isCorrect": false,
+        "explanation": "Mali. Huwag gumamit ng elevator kapag may sunog dahil maaari kang masuffocate o masadlak sa loob kapag nawalan ng kuryente. Gumamit ng hagdan."
+    },
+    {
+        "statement": "Ang pag-iimbak ng tubig, de-latang pagkain, flashlight, at first aid kit ay mabuting paghahanda para sa anumang sakuna.",
+        "isCorrect": true,
+        "explanation": "Tama. Ang emergency go bag ay mahalaga upang maging handa sa mga hindi inaasahang sakuna tulad ng bagyo, lindol, o baha."
+    },
+    {
+        "statement": "Kapag bumaha, ligtas na maglaro o lumangoy sa baha kasama ang mga kaibigan.",
+        "isCorrect": false,
+        "explanation": "Mali. Ang baha ay maaaring may dala ng dumi, bacteria, at maaaring malalim o may malakas na agos. Iwasan ang pagkakabasa ng baha."
+    },
+    {
+        "statement": "Kung may landslide warning, dapat lumikas kaagad sa ligtas na evacuation center.",
+        "isCorrect": true,
+        "explanation": "Tama. Huwag maghintay na gumuho ang lupa. Lumikas agad kapag inanunsyo na ng barangay o kapag malakas na ang ulan sa bundok."
+    },
+    {
+        "statement": "Ang unang dapat gawin kapag may nasunog ay kunin muna ang mga mahahalagang gamit bago tumawag ng bumbero.",
+        "isCorrect": false,
+        "explanation": "Mali. Unahing tumawag sa bumbero (telepono 160) at iligtas ang sarili at pamilya. Ang mga gamit ay maaaring palitan, ang buhay ay hindi."
+    },
+    {
+        "statement": "Ang pakikinig sa radyo o pagbabasa ng anunsyo mula sa pamahalaan ay makatutulong upang malaman ang tamang hakbang sa panahon ng sakuna.",
+        "isCorrect": true,
+        "explanation": "Tama. Ang opisyal na balita ay nagbibigay ng tamang impormasyon kung ano ang gagawin at kung saan dapat lumikas."
+    },
+    {
+        "statement": "Kapag tagtuyot, maaari pa ring mag-aksaya ng tubig dahil darating din naman ang ulan.",
+        "isCorrect": false,
+        "explanation": "Mali. Sa panahon ng tagtuyot, limitado ang supply ng tubig. Dapat magtipid at huwag mag-aksaya upang may magamit ang lahat."
+    }
+]
