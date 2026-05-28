@@ -401,3 +401,61 @@ function getUserAchievements(int $userId): array {
     $stmt->execute([$userId]);
     return $stmt->fetchAll();
 }
+
+function getGameLeaderboard(string $gameType, string $mode = null, int $limit = 10, int $offset = 0): array {
+    $pdo = getDB();
+
+    if ($mode) {
+        // Filter by specific game mode
+        $fullGameType = $gameType . '-' . $mode;
+        $stmt = $pdo->prepare("
+            SELECT 
+                s.*,
+                COALESCE(s.player_name, u.username) as display_name,
+                u.hero_class,
+                u.level,
+                u.xp
+            FROM scores s
+            LEFT JOIN users u ON s.user_id = u.id
+            WHERE s.game_type = ?
+            ORDER BY s.score DESC, s.created_at ASC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$fullGameType, $limit, $offset]);
+    } else {
+        // Filter by game type pattern (all modes for this game)
+        $pattern = $gameType . '-%';
+        $stmt = $pdo->prepare("
+            SELECT 
+                s.*,
+                COALESCE(s.player_name, u.username) as display_name,
+                u.hero_class,
+                u.level,
+                u.xp
+            FROM scores s
+            LEFT JOIN users u ON s.user_id = u.id
+            WHERE s.game_type LIKE ?
+            ORDER BY s.score DESC, s.created_at ASC
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->execute([$pattern, $limit, $offset]);
+    }
+
+    return $stmt->fetchAll();
+}
+
+function getTotalGameScores(string $gameType, string $mode = null): int {
+    $pdo = getDB();
+
+    if ($mode) {
+        $fullGameType = $gameType . '-' . $mode;
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM scores WHERE game_type = ?");
+        $stmt->execute([$fullGameType]);
+    } else {
+        $pattern = $gameType . '-%';
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM scores WHERE game_type LIKE ?");
+        $stmt->execute([$pattern]);
+    }
+
+    return (int) $stmt->fetchColumn();
+}
