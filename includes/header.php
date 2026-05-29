@@ -80,11 +80,11 @@ require_once __DIR__ . '/translations.php';
         /* Mobile menu slide down */
         .mobile-menu {
             max-height: 0;
-            overflow: hidden;
+            overflow-y: auto;
             transition: max-height 0.3s ease-out;
         }
         .mobile-menu.open {
-            max-height: 500px;
+            max-height: 100vh;
         }
 
         /* Dropdown animations */
